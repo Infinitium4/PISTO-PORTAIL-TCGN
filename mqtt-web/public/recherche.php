@@ -63,10 +63,6 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
             <?= htmlspecialchars($u['info_complementaire']) ?>
         </p>
 
-        <p>
-            ID vidéo :
-            <?= htmlspecialchars($u['id_video']) ?>
-        </p>
 
     <?php } ?>
 
