@@ -35,7 +35,7 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
 
 <body>
 
-    <h1>Recherche</h1>
+    <h1>Recherches</h1>
 
     <form method="GET">
 
