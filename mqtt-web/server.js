@@ -51,7 +51,7 @@ const db = mysql.createPool({
 
 app.get("/api/dimensions", async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT nom FROM univers_videos");
+        const [rows] = await db.query("SELECT nom FROM univers");
         res.json(rows.map(r => r.nom));
     } catch (err) {
         console.error(err);
