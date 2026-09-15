@@ -12,17 +12,26 @@
         <button type="submit">Rechercher</button>
     </form>
     <?php
-        require_once '/actionPHP/afficher.php';
-        foreach ($univers as $u){ ?>
 
-            <h2><?= htmlspecialchars($u['nom']) ?></h2>
+        require_once 'logbdd.php';
 
-            <p>Température : <?= htmlspecialchars($u['temperature']) ?> °C</p>
+        $recherche = $_GET['recherche'] ?? '';
 
-            <p><?= htmlspecialchars($u['info_complementaire']) ?></p>
+        $stmt = $pdo->prepare(
+            "SELECT * FROM univers WHERE nom LIKE ?"
+        );
 
-            <p>ID vidéo : <?= htmlspecialchars($u['id_video']) ?></p>
-        <?php
-        }?>
+        $stmt->execute(["%" . $recherche . "%"]);
+
+        $univers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($univers as $u) {
+            echo "<h2>" . htmlspecialchars($u['nom']) . "</h2>";
+            echo "<p>Température : " . htmlspecialchars($u['temperature']) . " °C</p>";
+            echo "<p>" . htmlspecialchars($u['info_complementaire']) . "</p>";
+            echo "<p>ID vidéo : " . htmlspecialchars($u['id_video']) . "</p>";
+        }
+    ?>
+    
 </body>
 </html>
