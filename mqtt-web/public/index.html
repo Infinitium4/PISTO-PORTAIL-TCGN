@@ -18,7 +18,7 @@
 
             const nomVideo = data.message.trim() + ".mp4";
 
-            video.src = "/media/" + encodeURIComponent(nomVideo);
+            video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
             video.load();
             video.play().catch(error => {
                 console.error("Impossible de lancer la vidéo :", error);
