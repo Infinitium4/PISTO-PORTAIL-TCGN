@@ -2,6 +2,8 @@
 #include <LiquidCrystal_I2C.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <HardwareSerial.h>
+#include <DFRobotDFPlayerMini.h>
 
 #define JOY_X 34
 #define JOY_Y 35
@@ -31,6 +33,11 @@ PubSubClient client(espClient);
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+// ---------- DFPLAYER ----------
+// Utilisation de l'UART2 de l'ESP32 (RX2=16, TX2=17)
+HardwareSerial mySoftwareSerial(2);
+DFRobotDFPlayerMini myDFPlayer;
+
 void connectWiFi() {
   Serial.print("Connexion WiFi");
   WiFi.begin(ssid, password);
@@ -48,7 +55,7 @@ void connectMQTT() {
     Serial.print("Connexion MQTT... ");
 
     if (client.connect("ESP32_Client", mqtt_user, mqtt_password)) {
-      Serial.println("connectÃ© !");
+      Serial.println("connecte !");
     } else {
       Serial.print("Erreur, rc=");
       Serial.print(client.state());
@@ -68,9 +75,27 @@ void setup() {
 
   lcd.init();
   lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Batterie : 86% ");
 
   connectWiFi();
   connectMQTT();
+
+  // ---------- INITIALISATION DFPLAYER ----------
+  mySoftwareSerial.begin(9600, SERIAL_8N1, 16, 17);
+
+  Serial.println("Initialisation du DFPlayer...");
+
+  if (!myDFPlayer.begin(mySoftwareSerial)) {
+    Serial.println("Erreur: DFPlayer non detecte !");
+    Serial.println("Verifiez le cablage et la carte SD.");
+    while (true) {
+      delay(1000);
+    }
+  }
+
+  Serial.println("DFPlayer connecte avec succes !");
+  myDFPlayer.volume(30); // volume de 0 (muet) a 30 (max)
 }
 
 void loop() {
@@ -112,6 +137,9 @@ void loop() {
     lcd.print("Ouverture du");
     lcd.setCursor(0, 1);
     lcd.print("portail ...");
+
+    myDFPlayer.play(1); // joue le son 0001.mp3 au moment de l'ouverture
+
     delay(2000);
 
     client.publish(mqtt_topic, dimensions[currentDimension]);
