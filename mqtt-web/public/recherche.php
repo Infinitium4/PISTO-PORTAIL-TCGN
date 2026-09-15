@@ -1,6 +1,6 @@
 <?php
 
-require_once 'logbdd.php';
+require_once 'logBDD.php';
 
 $univers = [];
 
@@ -8,15 +8,15 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
 
     $recherche = $_GET['recherche'];
 
-    $stmt = $pdo->prepare(
+    $nom = $pdo->prepare(
         "SELECT * FROM univers WHERE nom LIKE :recherche"
     );
 
-    $stmt->execute([
+    $nom->execute([
         'recherche' => '%' . $recherche . '%'
     ]);
 
-    $univers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $univers = $nom->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>
