@@ -1,69 +1,86 @@
+<?php
+
+require_once 'logbdd.php';
+
+$univers = [];
+
+if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
+
+    $recherche = $_GET['recherche'];
+
+    $stmt = $pdo->prepare(
+        "SELECT * FROM univers WHERE nom LIKE :recherche"
+    );
+
+    $stmt->execute([
+        'recherche' => '%' . $recherche . '%'
+    ]);
+
+    $univers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Recherche</title>
 </head>
 
 <body>
 
-    <h1>Recherches</h1>
+    <h1>Recherche</h1>
 
     <form method="GET">
-        <input 
-            type="text" 
-            name="recherche" 
+
+        <input
+            type="text"
+            name="recherche"
             placeholder="Rechercher..."
         >
-        <button type="submit">Rechercher</button>
+
+        <button type="submit">
+            Rechercher
+        </button>
+
     </form>
 
-    <?php
 
-    require_once '/actionPHP/logbdd.php';
+    <?php foreach ($univers as $u) { ?>
 
-    if (isset($_GET['recherche']) && $_GET['recherche'] != '') {
+        <h2><?= htmlspecialchars($u['nom']) ?></h2>
 
-        $recherche = $_GET['recherche'];
+        <p>
+            Température :
+            <?= htmlspecialchars($u['temperature']) ?> °C
+        </p>
 
-        $stmt = $pdo->prepare(
-            "SELECT * FROM univers WHERE nom LIKE ?"
-        );
+        <p>
+            <?= htmlspecialchars($u['info_complementaire']) ?>
+        </p>
 
-        $stmt->execute(["%" . $recherche . "%"]);
+        <p>
+            ID vidéo :
+            <?= htmlspecialchars($u['id_video']) ?>
+        </p>
 
-        $univers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    <?php } ?>
 
-        foreach ($univers as $u) {
-    ?>
-
-            <h2><?= htmlspecialchars($u['nom']) ?></h2>
-
-            <p>
-                Température :
-                <?= htmlspecialchars($u['temperature']) ?> °C
-            </p>
-
-            <p>
-                <?= htmlspecialchars($u['info_complementaire']) ?>
-            </p>
-
-            <p>
-                ID vidéo :
-                <?= htmlspecialchars($u['id_video']) ?>
-            </p>
 
     <?php
-        }
-
-        if (count($univers) == 0) {
-            echo "<p>Aucune planète trouvée.</p>";
-        }
+    if (
+        isset($_GET['recherche']) &&
+        $_GET['recherche'] !== '' &&
+        count($univers) === 0
+    ) {
+        echo "<p>Aucune planète trouvée.</p>";
     }
-
     ?>
 
 </body>
 </html>
-```
+
