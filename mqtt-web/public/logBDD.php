@@ -4,4 +4,5 @@ $pdo = new PDO(
     "web_app",
     "MotDePasseFort123!"
 );
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 ?>
