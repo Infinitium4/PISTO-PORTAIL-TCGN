@@ -257,7 +257,6 @@ body::after {
     z-index: -1;
 
     background-image:
-        url("images/rick.png"),
         url("images/morty.png");
 
     background-repeat: no-repeat, no-repeat;
