@@ -1,6 +1,6 @@
 <?php
 
-require_once 'logbdd.php';
+require_once 'logBDD.php';
 
 $stmt = $pdo->query("SELECT * FROM univers");
 
