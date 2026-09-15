@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCGN</title>
+<meta charset="UTF-8">
+<title>Portail RickLab</title>
 </head>
 <body>
-    test
-    <a href="recherche.html">Recherche</a>
+
+<h2>Messages MQTT</h2>
+<div id="messages"></div>
+
+<script>
+const ws = new WebSocket("ws://172.16.89.41:3000");
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    const p = document.createElement("p");
+    p.textContent = `${data.topic} : ${data.message}`;
+    document.getElementById("messages").appendChild(p);
+};
+
+ws.onopen = () => console.log("WebSocket connecté");
+</script>
+
 </body>
 </html>
