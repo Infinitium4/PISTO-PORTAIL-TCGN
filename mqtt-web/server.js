@@ -42,7 +42,7 @@ mqttClient.on("message", (topic, message) => {
 const db = mysql.createPool({
     host: "172.16.89.44",      // IP de la VM BDD
     user: "web_app",
-    password: "MotDePasseFort123!",
+    password: "root",
     database: "univers_videos",
     port: 3306,
     waitForConnections: true,
