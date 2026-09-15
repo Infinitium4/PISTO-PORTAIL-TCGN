@@ -18,7 +18,7 @@
 
             const nomVideo = data.message.trim() + ".mp4";
 
-            video.src = "/media/" + encodeURIComponent(nomVideo);
+            video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
             video.load();
             video.play().catch(error => {
                 console.error("Impossible de lancer la vidéo :", error);
@@ -31,6 +31,18 @@
 
         ws.onerror = (error) => {
             console.error("Erreur WebSocket :", error);
+        };
+
+        video.onplay = () => {
+            console.log("▶️ Lecture démarrée");
+        };
+
+        video.onplaying = () => {
+            console.log("🎬 Vidéo en cours de lecture");
+        };
+
+        video.onerror = (e) => {
+            console.error("❌ Erreur vidéo :", video.error);
         };
     </script>
 </body>
