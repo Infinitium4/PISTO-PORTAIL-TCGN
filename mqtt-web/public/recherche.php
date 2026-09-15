@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Recherche</h1>
+    <h1>Recherchessss</h1>
     <form>
         <input type="text" placeholder="Rechercher...">
         <button type="submit">Rechercher</button>
