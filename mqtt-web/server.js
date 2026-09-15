@@ -37,3 +37,10 @@ mqttClient.on("message", (topic, message) => {
         }
     });
 });
+
+// Route pour l'ESP32
+app.get("/api/dimensions", async (req, res) => {
+    const rows = await db.query("SELECT id FROM dimensions");
+
+    res.json(rows.map(r => r.id));
+});
