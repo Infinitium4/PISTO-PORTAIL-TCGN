@@ -20,6 +20,7 @@ body {
     z-index: 0;
 }
 
+<<<<<<< HEAD
 #startScreen {
     position: fixed;
     inset: 0;
@@ -43,4 +44,8 @@ body {
 
     border: none;
     border-radius: 15px;
+=======
+h1{
+    color: red;
+>>>>>>> a27d3762a07d9410717786f0ffe2e7a35dd45912
 }
