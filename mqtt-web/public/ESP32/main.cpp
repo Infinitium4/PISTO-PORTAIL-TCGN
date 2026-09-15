@@ -4,19 +4,17 @@
 #include <PubSubClient.h>
 #include <HardwareSerial.h>
 #include <DFRobotDFPlayerMini.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 #define JOY_X 34
 #define JOY_Y 35
 #define JOY_SW 32
 #define BTN 33
 
-const char* dimensions[] = {
-  "C-131",
-  "citadel",
-  "C-229"
-};
-
-const int NB_DIMENSIONS = sizeof(dimensions) / sizeof(dimensions[0]);
+const int MAX_DIMENSIONS = 20;
+String dimensions[MAX_DIMENSIONS];
+int NB_DIMENSIONS = 0;
 int currentDimension = 0;
 
 // ---------- CONFIG WIFI & MQTT ----------
@@ -27,6 +25,9 @@ const int mqtt_port = 1883;
 const char* mqtt_user = "monuser";
 const char* mqtt_password = "TCGN";
 const char* mqtt_topic = "ricklab/dimensions";
+const char* serverUrl = "http://172.16.89.41:3000/api/dimensions";
+
+String dimension;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -37,6 +38,42 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 // Utilisation de l'UART2 de l'ESP32 (RX2=16, TX2=17)
 HardwareSerial mySoftwareSerial(2);
 DFRobotDFPlayerMini myDFPlayer;
+
+void chargerDimensionsDepuisServeur() {
+  if (WiFi.status() != WL_CONNECTED) return;
+
+  HTTPClient http;
+  http.begin(serverUrl);
+
+  int code = http.GET();
+
+  if (code == HTTP_CODE_OK) {
+    String payload = http.getString();
+
+    JsonDocument doc;
+    DeserializationError err = deserializeJson(doc, payload);
+
+    if (!err && doc.is<JsonArray>()) {
+      NB_DIMENSIONS = 0;
+
+      for (JsonVariant v : doc.as<JsonArray>()) {
+        if (NB_DIMENSIONS < MAX_DIMENSIONS) {
+          dimensions[NB_DIMENSIONS] = v.as<String>();
+          NB_DIMENSIONS++;
+        }
+      }
+
+      Serial.println("Dimensions recuperees :");
+      for (int i = 0; i < NB_DIMENSIONS; i++) {
+        Serial.println(dimensions[i]);
+      }
+    }
+  } else {
+    Serial.printf("Erreur HTTP : %d\n", code);
+  }
+
+  http.end();
+}
 
 void connectWiFi() {
   Serial.print("Connexion WiFi");
@@ -108,6 +145,25 @@ void loop() {
   int x = analogRead(JOY_X);
   int sw = digitalRead(JOY_SW);
 
+  if (sw == LOW) {
+    lcd.clear();
+    lcd.print("Synchronisation");
+
+    chargerDimensionsDepuisServeur();
+
+    lcd.clear();
+    lcd.print("Maj : ");
+    lcd.print(NB_DIMENSIONS);
+    lcd.setCursor(0,1);
+    lcd.print("dimensions");
+
+    delay(500);
+
+    while (digitalRead(JOY_SW) == LOW) {
+      delay(10);
+    }
+  }
+
   if (x == 0){
     lcd.clear();
 
@@ -116,7 +172,10 @@ void loop() {
     lcd.print("DIMENSION :");
     lcd.setCursor(0, 1);
     lcd.print(dimensions[currentDimension]);
-    delay(100);
+    
+    while (digitalRead(JOY_X) == 0) {
+      delay(10);
+    }
   }
   
   if (x == 4095){
@@ -127,7 +186,10 @@ void loop() {
     lcd.print("DIMENSION :");
     lcd.setCursor(0, 1);
     lcd.print(dimensions[currentDimension]);
-    delay(100);
+
+    while (digitalRead(JOY_X) == 4095) {
+      delay(10);
+    }
   }
 
   if (digitalRead(BTN) == LOW){
