@@ -11,11 +11,19 @@
 #define JOY_Y 35
 #define JOY_SW 32
 #define BTN 33
+#define LED_PIN 25
 
 const int MAX_DIMENSIONS = 20;
 String dimensions[MAX_DIMENSIONS];
 int NB_DIMENSIONS = 0;
 int currentDimension = 0;
+
+// ---------- CONFIG LED ----------
+const int LED_BASE = 50;    // intensité de base en continu (0-255)
+const int LED_BOOST = 255;  // intensité max pendant le boost
+const unsigned long boostDuration = 5000; // durée du boost en ms
+bool ledBoosting = false;
+unsigned long boostStartTime = 0;
 
 // ---------- CONFIG WIFI & MQTT ----------
 const char* ssid = "WIFI_LABO";
@@ -27,15 +35,11 @@ const char* mqtt_password = "TCGN";
 const char* mqtt_topic = "ricklab/dimensions";
 const char* serverUrl = "http://172.16.89.41:3000/api/dimensions";
 
-String dimension;
-
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-// ---------- DFPLAYER ----------
-// Utilisation de l'UART2 de l'ESP32 (RX2=16, TX2=17)
 HardwareSerial mySoftwareSerial(2);
 DFRobotDFPlayerMini myDFPlayer;
 
@@ -61,11 +65,6 @@ void chargerDimensionsDepuisServeur() {
           dimensions[NB_DIMENSIONS] = v.as<String>();
           NB_DIMENSIONS++;
         }
-      }
-
-      Serial.println("Dimensions recuperees :");
-      for (int i = 0; i < NB_DIMENSIONS; i++) {
-        Serial.println(dimensions[i]);
       }
     }
   } else {
@@ -107,6 +106,9 @@ void setup() {
 
   pinMode(BTN, INPUT_PULLUP);
   pinMode(JOY_SW, INPUT_PULLUP);
+  pinMode(LED_PIN, OUTPUT);
+
+  analogWrite(LED_PIN, LED_BASE); // LED allumée en continu à intensité de base
 
   Wire.begin(21, 22);   
 
@@ -118,21 +120,16 @@ void setup() {
   connectWiFi();
   connectMQTT();
 
-  // ---------- INITIALISATION DFPLAYER ----------
   mySoftwareSerial.begin(9600, SERIAL_8N1, 16, 17);
-
-  Serial.println("Initialisation du DFPlayer...");
 
   if (!myDFPlayer.begin(mySoftwareSerial)) {
     Serial.println("Erreur: DFPlayer non detecte !");
-    Serial.println("Verifiez le cablage et la carte SD.");
     while (true) {
       delay(1000);
     }
   }
 
-  Serial.println("DFPlayer connecte avec succes !");
-  myDFPlayer.volume(30); // volume de 0 (muet) a 30 (max)
+  myDFPlayer.volume(30);
 }
 
 void loop() {
@@ -141,6 +138,12 @@ void loop() {
     connectMQTT();
   }
   client.loop();
+
+  // ---------- GESTION DU BOOST LED (non bloquant) ----------
+  if (ledBoosting && millis() - boostStartTime > boostDuration) {
+    analogWrite(LED_PIN, LED_BASE); // retour à l'intensité normale
+    ledBoosting = false;
+  }
 
   int x = analogRead(JOY_X);
   int sw = digitalRead(JOY_SW);
@@ -166,7 +169,6 @@ void loop() {
 
   if (x == 0){
     lcd.clear();
-
     currentDimension = (currentDimension - 1 + NB_DIMENSIONS) % NB_DIMENSIONS;
     lcd.setCursor(0, 0);
     lcd.print("DIMENSION :");
@@ -180,7 +182,6 @@ void loop() {
   
   if (x == 4095){
     lcd.clear();
-
     currentDimension = (currentDimension + 1 + NB_DIMENSIONS) % NB_DIMENSIONS;
     lcd.setCursor(0, 0);
     lcd.print("DIMENSION :");
@@ -194,20 +195,23 @@ void loop() {
 
   if (digitalRead(BTN) == LOW){
     lcd.clear();
-
     lcd.setCursor(0, 0);
     lcd.print("Ouverture du");
     lcd.setCursor(0, 1);
     lcd.print("portail ...");
 
-    myDFPlayer.play(1); // joue le son 0001.mp3 au moment de l'ouverture
+    // ---------- DECLENCHEMENT DU BOOST LED ----------
+    analogWrite(LED_PIN, LED_BOOST);
+    ledBoosting = true;
+    boostStartTime = millis();
+
+    myDFPlayer.play(1);
 
     delay(2000);
 
     client.publish(mqtt_topic, dimensions[currentDimension]);
 
     lcd.clear();
-
     lcd.setCursor(0, 0);
     lcd.print("Portail ouvert");
     lcd.setCursor(0, 1);
