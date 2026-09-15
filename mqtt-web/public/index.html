@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Portail RickLab</title>
+    <meta charset="UTF-8">
+    <title>Portail RickLab</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="messages"></div>
+    <video id="backgroundVideo" autoplay muted playsinline></video>
 
     <script>
-    const ws = new WebSocket("ws://172.16.89.41:3000");
+        const ws = new WebSocket("ws://172.16.89.41:3000");
 
-    ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+        const video = document.getElementById("backgroundVideo");
 
-        const p = document.createElement("p");
-        p.textContent = `${data.topic} : ${data.message}`;
-        document.getElementById("messages").appendChild(p);
-    };
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
 
-    ws.onopen = () => console.log("WebSocket connecté");
+            const nomVideo = data.message.trim() + ".mp4";
+
+            video.src = "/media/" + encodeURIComponent(nomVideo);
+            video.load();
+            video.play().catch(error => {
+                console.error("Impossible de lancer la vidéo :", error);
+            });
+        };
+
+        ws.onopen = () => {
+            console.log("WebSocket connecté");
+        };
+
+        ws.onerror = (error) => {
+            console.error("Erreur WebSocket :", error);
+        };
     </script>
 </body>
 </html>
