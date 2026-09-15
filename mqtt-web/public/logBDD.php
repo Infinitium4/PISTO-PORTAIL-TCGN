@@ -1,7 +1,8 @@
 <?php
 $pdo = new PDO(
-    "mysql:host=172.16.89.44;dbname=esp32_db;charset=utf8mb4",
+    "mysql:host=172.16.89.44;dbname=univers_videos;charset=utf8mb4",
     "web_app",
     "MotDePasseFort123!"
 );
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 ?>

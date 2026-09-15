@@ -13,25 +13,15 @@
     </form>
     <?php
         require_once '/actionPHP/afficher.php';
-        foreach ($univers as $u){?>
+        foreach ($univers as $u){ ?>
 
             <h2><?= htmlspecialchars($u['nom']) ?></h2>
 
-            <p>
-                Température :
-                <?= htmlspecialchars($u['temperature']) ?> °C
-            </p>
+            <p>Température : <?= htmlspecialchars($u['temperature']) ?> °C</p>
 
-            <p>
-                <?= htmlspecialchars($u['info_complementaire']) ?>
-            </p>
+            <p><?= htmlspecialchars($u['info_complementaire']) ?></p>
 
-            <p>
-                ID vidéo :
-                <?= htmlspecialchars($u['id_video']) ?>
-            </p>
-
-            <hr>
+            <p>ID vidéo : <?= htmlspecialchars($u['id_video']) ?></p>
         <?php
         }?>
 </body>
