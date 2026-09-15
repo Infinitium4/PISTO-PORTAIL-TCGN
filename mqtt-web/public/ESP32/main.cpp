@@ -209,7 +209,7 @@ void loop() {
 
     delay(2000);
 
-    client.publish(mqtt_topic, dimensions[currentDimension]);
+    client.publish(mqtt_topic, dimensions[currentDimension].c_str());
 
     lcd.clear();
     lcd.setCursor(0, 0);
