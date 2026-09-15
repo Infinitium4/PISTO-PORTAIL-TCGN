@@ -29,11 +29,13 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Recherche</title>
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
-    <h1>Recherche</h1>
+    <h1>Recherches</h1>
 
     <form method="GET">
 
