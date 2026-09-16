@@ -349,7 +349,8 @@ body > p {
 .retour {
     display: inline-block;
 
-    margin-bottom: 0px;
+    margin-bottom: 35px;
+    margin-left: -110px;
 
     color: #8affc1;
 
