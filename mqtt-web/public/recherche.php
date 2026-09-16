@@ -46,7 +46,7 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
 
     <title>Rick's Multiverse</title>
 
-    <link rel="stylesheet" href="multivers.css">
+    <link rel="stylesheet" href="recherche.css">
 
 </head>
 
