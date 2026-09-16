@@ -80,8 +80,8 @@ body::after {
     z-index: -2;
 
     background-image:
-        url("images/rick.png"),
-        url("images/morty.png");
+        url("images/morty.png"),
+        url("images/rick.png");
 
     background-repeat:
         no-repeat,
