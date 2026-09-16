@@ -55,11 +55,12 @@ if (!$planete) {
             }
         };
     </script>
+    <a href="recherche.php" class="retour">
+        ← Retour aux recherches
+    </a>
     <main class="wiki">
 
-        <a href="recherche.php" class="retour">
-            ← Retour aux recherches
-        </a>
+        
 
         <h1>
             <?= htmlspecialchars($planete['nom']) ?>
