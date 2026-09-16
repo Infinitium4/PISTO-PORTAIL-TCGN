@@ -347,8 +347,12 @@ body > p {
 .retour {
     display: inline-block;
 
-    margin-bottom: 0px;
-    margin-left: 0px;
+    position: absolute;
+
+    top: 41px;
+    left: 55px;
+
+    padding: 12px 20px;
 
     color: #8affc1;
 
@@ -358,17 +362,29 @@ body > p {
 
     font-weight: bold;
 
-    transition: 0.25s;
+    background: rgba(10, 25, 28, 0.85);
 
-    position: absolute;
-    top: 41px;
-    left: 55px;
+    border: 1px solid rgba(85, 255, 153, 0.4);
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 0 15px rgba(85, 255, 153, 0.12);
+
+    backdrop-filter: blur(10px);
+
+    transition: 0.25s;
 }
 
 .retour:hover {
     color: white;
 
     transform: translateX(-6px);
+
+    border-color: #55ff99;
+
+    box-shadow:
+        0 0 20px rgba(85, 255, 153, 0.35);
 
     text-shadow:
         0 0 10px #55ff99;
