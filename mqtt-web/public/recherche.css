@@ -1,867 +1,29 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
 
-html {
-    scroll-behavior: smooth;
-}
 
-body {
-    min-height: 100vh;
+.interdimensional-radar {
 
-    font-family: Arial, Helvetica, sans-serif;
+    width: min(1100px, 92%);
 
-    color: white;
-
-    background:
-        radial-gradient(circle at 20% 20%, rgba(70, 255, 140, 0.08), transparent 25%),
-        radial-gradient(circle at 80% 80%, rgba(0, 180, 255, 0.08), transparent 25%),
-        #050b0d;
-
-    overflow-x: hidden;
-}
-
-
-
-
-body::before {
-    content: "";
-
-    position: fixed;
-
-    inset: 0;
-
-    pointer-events: none;
-
-    z-index: -3;
-
-    background-image:
-        radial-gradient(white 1px, transparent 1px),
-        radial-gradient(#8affc1 1px, transparent 1px);
-
-    background-size:
-        120px 120px,
-        220px 220px;
-
-    background-position:
-        20px 30px,
-        100px 150px;
-
-    opacity: 0.35;
-
-    animation: stars 30s linear infinite;
-}
-
-@keyframes stars {
-
-    from {
-        transform: translateY(0);
-    }
-
-    to {
-        transform: translateY(120px);
-    }
-}
-
-
-
-
-body::after {
-    content: "";
-
-    position: fixed;
-
-    inset: 0;
-
-    pointer-events: none;
-
-    z-index: -2;
-
-    background-image:
-        url("images/morty.png"),
-        url("images/rick.png");
-
-    background-repeat:
-        no-repeat,
-        no-repeat;
-
-    background-size:
-        210px,
-        210px;
-
-    background-position:
-        10% 70%,
-        90% 70%;
-
-    opacity: 0.75;
-
-    animation: characters 14s ease-in-out infinite;
-}
-
-@keyframes characters {
-
-    0% {
-        background-position:
-            10% 70%,
-            95% 75%;
-    }
-
-    25% {
-        background-position:
-            15% 65%,
-            100% 70%;
-    }
-
-    50% {
-        background-position:
-            20% 75%,
-            95% 80%;
-    }
-
-    75% {
-        background-position:
-            15% 80%,
-            100% 85%;
-    }
-
-    100% {
-        background-position:
-            10% 70%,
-            95% 75%;
-    }
-}
-
-body > h1 {
-    text-align: center;
-
-    margin-bottom: 40px;
-
-    font-size: 55px;
-
-    color: #8affc1;
-
-    letter-spacing: 2px;
-
-    text-shadow:
-        0 0 10px #55ff99,
-        0 0 25px rgba(85, 255, 153, 0.8),
-        0 0 50px rgba(85, 255, 153, 0.3);
-
-    animation: titleGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes titleGlow {
-
-    from {
-        text-shadow:
-            0 0 10px #55ff99,
-            0 0 25px rgba(85, 255, 153, 0.5);
-    }
-
-    to {
-        text-shadow:
-            0 0 15px #55ff99,
-            0 0 35px rgba(85, 255, 153, 0.9),
-            0 0 60px rgba(85, 255, 153, 0.4);
-    }
-}
-
-
-
-
-form {
-    width: 90%;
-
-    max-width: 800px;
-
-    margin: 0 auto 50px;
-
-    display: flex;
-
-    gap: 12px;
-
-    padding: 15px;
-
-    background: rgba(10, 25, 28, 0.85);
-
-    border: 1px solid rgba(85, 255, 153, 0.4);
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 0 20px rgba(85, 255, 153, 0.15);
-
-    backdrop-filter: blur(10px);
-}
-
-
-
-
-form input {
-    flex: 1;
-
-    min-width: 0;
-
-    padding: 15px 18px;
-
-    border: 2px solid rgba(85, 255, 153, 0.3);
-
-    border-radius: 10px;
-
-    outline: none;
-
-    background: rgba(0, 0, 0, 0.45);
-
-    color: white;
-
-    font-size: 16px;
-
-    transition: 0.25s;
-}
-
-form input::placeholder {
-    color: #8b9a96;
-}
-
-form input:focus {
-    border-color: #55ff99;
-
-    box-shadow:
-        0 0 10px rgba(85, 255, 153, 0.5),
-        inset 0 0 10px rgba(85, 255, 153, 0.05);
-}
-
-
-
-
-form button {
-    padding: 0 22px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: linear-gradient(
-        135deg,
-        #55ff99,
-        #20c978
-    );
-
-    color: #03100a;
-
-    font-size: 15px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: 0.25s;
-
-    white-space: nowrap;
-}
-
-form button:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 0 15px rgba(85, 255, 153, 0.7);
-}
-
-form button:active {
-    transform: translateY(0);
-}
-
-
-
-body > h2,
-.planete-card {
-    width: 90%;
-
-    max-width: 900px;
-
-    margin: 20px auto;
-}
-
-
-
-
-body > h2 {
-    padding: 20px 25px;
-
-    background: rgba(10, 25, 28, 0.85);
-
-    border-left: 4px solid #55ff99;
-
-    border-radius: 12px;
-
-    box-shadow:
-        0 0 15px rgba(85, 255, 153, 0.12);
-}
-
-body > h2 a {
-    color: #8affc1;
-
-    text-decoration: none;
-
-    transition: 0.2s;
-}
-
-body > h2 a:hover {
-    color: white;
-
-    text-shadow:
-        0 0 10px #55ff99,
-        0 0 25px #55ff99;
-}
-
-
-
-
-body > p {
-    width: 90%;
-
-    max-width: 850px;
-
-    margin: 10px auto;
-
-    color: #d4ded9;
-
-    line-height: 1.6;
-}
-
-
-
-.wiki {
-    width: 90%;
-
-    max-width: 1100px;
-
-    margin: 0 auto;
-
-    padding: 0px
-}
-
-
-
-
-.retour {
-    display: inline-block;
-
-    position: absolute;
-
-    top: 41px;
-    left: 55px;
-
-    padding: 12px 20px;
-
-    color: #8affc1;
-
-    text-decoration: none;
-
-    font-size: 18px;
-
-    font-weight: bold;
-
-    background: rgba(10, 25, 28, 0.85);
-
-    border: 1px solid rgba(85, 255, 153, 0.4);
-
-    border-radius: 12px;
-
-    box-shadow:
-        0 0 15px rgba(85, 255, 153, 0.12);
-
-    backdrop-filter: blur(10px);
-
-    transition: 0.25s;
-}
-
-.retour:hover {
-    color: white;
-
-    transform: translateX(-6px);
-
-    border-color: #55ff99;
-
-    box-shadow:
-        0 0 20px rgba(85, 255, 153, 0.35);
-
-    text-shadow:
-        0 0 10px #55ff99;
-}
-
-
-
-
-.wiki h1 {
-    margin-bottom: 45px;
-
-    padding-bottom: 20px;
-
-    font-size: 65px;
-
-    color: #8affc1;
-
-    border-bottom: 2px solid #55ff99;
-
-    text-shadow:
-        0 0 10px #55ff99,
-        0 0 30px rgba(85, 255, 153, 0.7);
-}
-
-
-
-
-.wiki-info {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 25px;
-
-    padding: 35px;
-
-    background: rgba(7, 17, 20, 0.92);
-
-    border: 1px solid rgba(85, 255, 153, 0.45);
-
-    border-radius: 25px;
-
-    box-shadow:
-        0 0 25px rgba(85, 255, 153, 0.18),
-        inset 0 0 30px rgba(85, 255, 153, 0.03);
-
-    backdrop-filter: blur(12px);
-}
-
-
-
-.image-planete {
-    display: block;
-
-    width: 100%;
-
-    max-width: 450px;
-
-    height: 450px;
-
-    margin: 0 auto 30px;
-
-    object-fit: contain;
-
-    border-radius: 20px;
-
-    filter:
-        drop-shadow(0 0 15px rgba(85, 255, 153, 0.45));
-
-    transition: 0.4s;
-}
-
-.image-planete:hover {
-    transform: scale(1.04) rotate(1deg);
-
-    filter:
-        drop-shadow(0 0 25px rgba(85, 255, 153, 0.8));
-}
-
-
-
-.wiki-info h2 {
-    margin-bottom: 20px;
-
-    color: #8affc1;
-
-    font-size: 28px;
-
-    text-shadow:
-        0 0 8px rgba(85, 255, 153, 0.4);
-}
-
-
-
-
-.wiki-info p {
-    margin-bottom: 30px;
-
-    color: #dce5e1;
-
-    font-size: 18px;
-
-    line-height: 1.7;
-}
-
-.wiki-info strong {
-    color: #8affc1;
-}
-
-
-
-
-.wiki-info p {
-    padding: 15px 18px;
-
-    background: rgba(85, 255, 153, 0.04);
-
-    border-left: 3px solid rgba(85, 255, 153, 0.5);
-
-    border-radius: 8px;
-}
-
-.dangerometre {
-    margin-top: 30px;
-
-    padding: 25px;
-
-    background:
-        radial-gradient(
-            circle at 50% 50%,
-            rgba(85, 255, 153, 0.08),
-            transparent 65%
-        ),
-        rgba(3, 12, 15, 0.95);
-
-    border: 2px solid #55ff99;
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 0 10px rgba(85, 255, 153, 0.4),
-        0 0 30px rgba(85, 255, 153, 0.15),
-        inset 0 0 25px rgba(85, 255, 153, 0.05);
-
-    position: relative;
-
-    overflow: hidden;
-}
-
-
-/* Petit effet lumineux qui traverse le dangeromètre */
-
-.dangerometre::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: -100%;
-
-    width: 50%;
-    height: 2px;
-
-    background: #8affc1;
-
-    box-shadow:
-        0 0 10px #55ff99,
-        0 0 20px #55ff99;
-
-    animation: scanner 3s linear infinite;
-}
-
-@keyframes scanner {
-
-    0% {
-        left: -50%;
-    }
-
-    100% {
-        left: 150%;
-    }
-}
-
-
-.dangerometre h2 {
-    margin-bottom: 20px;
-
-    color: #8affc1;
-
-    font-size: 26px;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
-
-    text-shadow:
-        0 0 5px #55ff99,
-        0 0 15px rgba(85, 255, 153, 0.7);
-}
-
-
-/* Barre */
-
-.danger-bar {
-    width: 100%;
-
-    height: 28px;
-
-    padding: 4px;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            rgba(85, 255, 153, 0.08) 0px,
-            rgba(85, 255, 153, 0.08) 8px,
-            transparent 8px,
-            transparent 14px
-        ),
-        #020708;
-
-    border: 1px solid rgba(138, 255, 193, 0.6);
-
-    border-radius: 6px;
-
-    overflow: hidden;
-
-    box-shadow:
-        inset 0 0 10px rgba(0, 0, 0, 0.9),
-        0 0 10px rgba(85, 255, 153, 0.2);
-}
-
-
-/* Niveau de danger */
-
-.danger-progress {
-    height: 100%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #55ff99 0%,
-            #55ff99 25%,
-            #ffe600 50%,
-            #ff8c00 75%,
-            #ff3333 100%
-        );
-
-    border-radius: 3px;
-
-    box-shadow:
-        0 0 8px #55ff99,
-        0 0 15px rgba(255, 50, 50, 0.5);
-
-    transition: width 0.8s ease;
-
-    position: relative;
-}
-
-
-/* Petites lignes futuristes sur la jauge */
-
-.danger-progress::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            transparent 0px,
-            transparent 10px,
-            rgba(255,255,255,0.25) 10px,
-            rgba(255,255,255,0.25) 11px
-        );
-
-    animation: dangerScan 1s linear infinite;
-}
-
-@keyframes dangerScan {
-
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(20px);
-    }
-}
-
-
-.dangerometre p {
-    margin-top: 15px;
-
-    padding: 10px;
-
-    color: #ff7777;
-
-    font-weight: bold;
-
-    text-align: center;
-
-    letter-spacing: 1px;
-
-    background: rgba(255, 50, 50, 0.06);
-
-    border: 1px solid rgba(255, 80, 80, 0.2);
-
-    border-radius: 8px;
-
-    text-shadow:
-        0 0 8px rgba(255, 50, 50, 0.6);
-}
-
-.planete-card {
-    width: 90%;
-    max-width: 900px;
-
-    margin: 30px auto;
-    padding: 25px;
-
-    background: rgba(7, 17, 20, 0.92);
-
-    border: 1px solid rgba(85, 255, 153, 0.45);
-
-    border-radius: 20px;
-
-    box-shadow:
-        0 0 20px rgba(85, 255, 153, 0.15),
-        inset 0 0 20px rgba(85, 255, 153, 0.03);
-
-    backdrop-filter: blur(10px);
-}
-
-
-.planete-card h2 {
-    margin-bottom: 20px;
-
-    padding-bottom: 15px;
-
-    border-bottom: 1px solid rgba(85, 255, 153, 0.3);
-}
-
-
-.planete-card h2 a {
-    color: #8affc1;
-
-    text-decoration: none;
-
-    font-size: 28px;
-
-    transition: 0.25s;
-}
-
-
-.planete-card h2 a:hover {
-    color: white;
-
-    text-shadow:
-        0 0 10px #55ff99;
-}
-
-
-.planete-info {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 12px;
-}
-
-
-.info {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 6px;
-
-    padding: 15px;
-
-    background: rgba(85, 255, 153, 0.04);
-
-    border-left: 3px solid rgba(85, 255, 153, 0.5);
-
-    border-radius: 8px;
-}
-
-
-.info strong {
-    color: #8affc1;
-
-    font-size: 15px;
-}
-
-
-.info span {
-    color: #dce5e1;
-
-    font-size: 17px;
-
-    line-height: 1.5;
-}
-
-
-.info.description {
-    grid-column: 1 / -1;
-}
-
-
-.aucune-planete {
-    width: 90%;
-    max-width: 900px;
-
-    margin: 30px auto;
-
-    padding: 20px;
-
-    color: #ff7777;
-
-    text-align: center;
-
-    background: rgba(255, 50, 50, 0.08);
-
-    border: 1px solid rgba(255, 80, 80, 0.4);
-
-    border-radius: 12px;
-}
-
-
-@media (max-width: 700px) {
-
-    .planete-info {
-        grid-template-columns: 1fr;
-    }
-
-    .info.description {
-        grid-column: auto;
-    }
-
-}
-
-/* =========================================
-   SCANNER INTERDIMENSIONNEL
-========================================= */
-
-.planet-scanner {
-
-    margin-top: 40px;
-
-    padding: 25px;
+    margin: 50px auto;
 
     background:
         radial-gradient(
             circle at center,
-            rgba(85, 255, 153, 0.08),
+            rgba(50, 255, 150, 0.08),
             transparent 60%
         ),
-        rgba(2, 10, 13, 0.96);
+        rgba(3, 12, 15, 0.96);
 
-    border: 2px solid #55ff99;
-
-    border-radius: 18px;
+    border: 1px solid rgba(100, 255, 170, 0.45);
 
     box-shadow:
-        0 0 15px rgba(85, 255, 153, 0.35),
-        0 0 40px rgba(85, 255, 153, 0.1),
-        inset 0 0 30px rgba(85, 255, 153, 0.05);
+        0 0 20px rgba(50, 255, 150, 0.12),
+        inset 0 0 40px rgba(50, 255, 150, 0.04);
 
-    color: #8affc1;
-
-    position: relative;
+    font-family: monospace;
 
     overflow: hidden;
+
 }
 
 
@@ -869,7 +31,30 @@ body > p {
    HEADER
 ========================================= */
 
-.scanner-header {
+.radar-header {
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 20px;
+
+    border-bottom: 1px solid rgba(100, 255, 170, 0.3);
+
+    color: #8affc1;
+
+    font-size: 14px;
+
+    letter-spacing: 1px;
+
+}
+
+
+.radar-title {
 
     display: flex;
 
@@ -877,40 +62,46 @@ body > p {
 
     gap: 10px;
 
-    padding-bottom: 15px;
-
-    margin-bottom: 20px;
-
-    border-bottom: 1px solid rgba(85, 255, 153, 0.25);
-
-    font-size: 14px;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
 }
 
-.scanner-status-dot {
+
+.radar-status {
 
     width: 9px;
-    height: 9px;
 
-    background: #55ff99;
+    height: 9px;
 
     border-radius: 50%;
 
+    background: #7dffad;
+
     box-shadow:
-        0 0 8px #55ff99,
-        0 0 15px #55ff99;
+        0 0 5px #7dffad,
+        0 0 12px #7dffad;
+
+    animation: radarStatus 1.5s infinite;
+
 }
 
-.scanner-version {
 
-    margin-left: auto;
+@keyframes radarStatus {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+
+}
+
+
+.radar-version {
 
     opacity: 0.5;
 
-    font-size: 11px;
 }
 
 
@@ -918,194 +109,344 @@ body > p {
    CONTENU
 ========================================= */
 
-.scanner-content {
+.radar-container {
 
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 320px;
 
-    gap: 35px;
+    gap: 30px;
 
-    align-items: center;
+    padding: 35px;
+
 }
 
 
 /* =========================================
-   AFFICHAGE PLANÈTE
+   RADAR
 ========================================= */
 
-.planet-display {
-
-    min-height: 380px;
+.radar {
 
     position: relative;
 
-    display: flex;
+    width: min(520px, 100%);
 
-    justify-content: center;
+    aspect-ratio: 1 / 1;
 
-    align-items: center;
+    margin: auto;
+
+    border-radius: 50%;
 
     overflow: hidden;
 
     background:
         radial-gradient(
             circle,
-            rgba(0, 217, 255, 0.08),
-            transparent 65%
+            rgba(80, 255, 160, 0.08) 0%,
+            rgba(20, 100, 60, 0.05) 45%,
+            rgba(0, 0, 0, 0.25) 75%
         );
 
-    border: 1px solid rgba(0, 217, 255, 0.2);
-
-    border-radius: 12px;
-}
-
-
-/* PLANÈTE */
-
-.planet {
-
-    width: 180px;
-    height: 180px;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle at 35% 30%,
-            #8affc1 0%,
-            #55ff99 20%,
-            #168f69 45%,
-            #063f39 75%,
-            #011b1c 100%
-        );
+    border: 2px solid rgba(100, 255, 170, 0.6);
 
     box-shadow:
-        0 0 20px rgba(85, 255, 153, 0.8),
-        0 0 60px rgba(85, 255, 153, 0.35),
-        inset -25px -20px 35px rgba(0, 0, 0, 0.65);
+        0 0 25px rgba(50, 255, 150, 0.12),
+        inset 0 0 50px rgba(50, 255, 150, 0.08);
 
-    position: relative;
-
-    z-index: 2;
-
-    animation: planetFloat 4s ease-in-out infinite;
 }
 
 
-/* LUMIÈRE PLANÈTE */
+/* =========================================
+   GRILLE
+========================================= */
 
-.planet-light {
+.radar-grid {
 
     position: absolute;
 
-    width: 100%;
-    height: 100%;
+    inset: 0;
 
-    border-radius: 50%;
-
-    background:
+    background-image:
         linear-gradient(
-            120deg,
-            rgba(255,255,255,0.35),
-            transparent 35%
+            rgba(100, 255, 170, 0.08) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(100, 255, 170, 0.08) 1px,
+            transparent 1px
         );
 
-}
-
-
-/* =========================================
-   ANNEAUX DU SCANNER
-========================================= */
-
-.scanner-ring {
-
-    position: absolute;
-
-    border: 1px solid rgba(0, 217, 255, 0.35);
+    background-size: 25px 25px;
 
     border-radius: 50%;
 
-    z-index: 1;
-}
-
-.ring-1 {
-
-    width: 230px;
-    height: 230px;
-
-    animation: scannerRotate 8s linear infinite;
-}
-
-.ring-2 {
-
-    width: 290px;
-    height: 290px;
-
-    border-style: dashed;
-
-    animation: scannerRotateReverse 12s linear infinite;
-}
-
-.ring-3 {
-
-    width: 350px;
-    height: 350px;
-
-    border-color: rgba(85, 255, 153, 0.15);
-
-    animation: scannerPulse 3s ease-in-out infinite;
 }
 
 
 /* =========================================
-   LIGNE DE SCAN
+   CERCLES
 ========================================= */
 
-.scan-line {
+.radar-circle {
 
     position: absolute;
 
+    border: 1px solid rgba(100, 255, 170, 0.35);
+
+    border-radius: 50%;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+}
+
+
+.circle-1 {
+
+    width: 33%;
+
+    height: 33%;
+
+}
+
+
+.circle-2 {
+
+    width: 66%;
+
+    height: 66%;
+
+}
+
+
+.circle-3 {
+
+    width: 94%;
+
+    height: 94%;
+
+}
+
+
+/* =========================================
+   CROIX CENTRALE
+========================================= */
+
+.radar-cross {
+
+    position: absolute;
+
+    background: rgba(100, 255, 170, 0.25);
+
+}
+
+
+.radar-cross.horizontal {
+
     width: 100%;
+
+    height: 1px;
+
+    left: 0;
+
+    top: 50%;
+
+}
+
+
+.radar-cross.vertical {
+
+    width: 1px;
+
+    height: 100%;
+
+    left: 50%;
+
+    top: 0;
+
+}
+
+
+/* =========================================
+   BALAYAGE
+========================================= */
+
+.radar-sweep {
+
+    position: absolute;
+
+    width: 50%;
 
     height: 2px;
 
-    background: #55ff99;
+    left: 50%;
+
+    top: 50%;
+
+    transform-origin: left center;
+
+    background: linear-gradient(
+        90deg,
+        rgba(120, 255, 180, 0.9),
+        rgba(120, 255, 180, 0)
+    );
 
     box-shadow:
-        0 0 8px #55ff99,
-        0 0 20px #55ff99;
+        0 0 10px rgba(100, 255, 170, 0.8);
 
-    z-index: 5;
+    animation: radarSweep 3s linear infinite;
 
-    opacity: 0.7;
+}
 
-    animation: scanLine 3s linear infinite;
+
+@keyframes radarSweep {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
 }
 
 
 /* =========================================
-   COORDONNÉES
+   CENTRE
 ========================================= */
 
-.coordinates {
+.radar-center {
 
     position: absolute;
 
-    bottom: 15px;
+    left: 50%;
 
-    left: 15px;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 16px;
+
+    height: 16px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #9affc5;
+
+    font-size: 20px;
+
+    text-shadow:
+        0 0 8px #7dffad;
+
+    z-index: 10;
+
+}
+
+
+/* =========================================
+   SIGNATURES
+========================================= */
+
+.radar-signatures {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 5;
+
+}
+
+
+.radar-signature {
+
+    position: absolute;
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #8affc1;
+
+    box-shadow:
+        0 0 5px #8affc1,
+        0 0 15px rgba(100, 255, 170, 0.9);
+
+    cursor: pointer;
+
+    transform: translate(-50%, -50%);
+
+    animation: signaturePulse 1.5s infinite;
+
+}
+
+
+@keyframes signaturePulse {
+
+    0%,
+    100% {
+
+        opacity: 1;
+
+        box-shadow:
+            0 0 5px #8affc1,
+            0 0 15px rgba(100, 255, 170, 0.9);
+
+    }
+
+    50% {
+
+        opacity: 0.45;
+
+        box-shadow:
+            0 0 3px #8affc1,
+            0 0 7px rgba(100, 255, 170, 0.5);
+
+    }
+
+}
+
+
+/* =========================================
+   NOM DE LA PLANÈTE
+========================================= */
+
+.radar-tooltip {
+
+    position: absolute;
+
+    padding: 7px 10px;
+
+    background: rgba(2, 15, 10, 0.95);
+
+    border: 1px solid rgba(100, 255, 170, 0.5);
+
+    color: #9affc5;
 
     font-family: monospace;
 
-    font-size: 11px;
+    font-size: 12px;
 
-    line-height: 1.7;
+    white-space: nowrap;
 
-    color: #00d9ff;
+    pointer-events: none;
 
-    text-shadow:
-        0 0 8px rgba(0, 217, 255, 0.7);
+    transform: translate(10px, -35px);
+
+    z-index: 20;
+
 }
 
 
@@ -1113,37 +454,58 @@ body > p {
    INFORMATIONS
 ========================================= */
 
-.scanner-info h2 {
+.radar-info {
 
-    margin-bottom: 15px;
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
 
     color: #8affc1;
 
-    font-size: 25px;
-
-    letter-spacing: 2px;
-
-    text-shadow:
-        0 0 8px #55ff99,
-        0 0 20px rgba(85, 255, 153, 0.5);
 }
 
-.target-name {
 
-    margin-bottom: 15px;
+.radar-info-title {
 
-    font-size: 13px;
+    font-size: 18px;
 
-    color: #00d9ff;
+    font-weight: bold;
 
     letter-spacing: 1px;
+
+    border-bottom: 1px solid rgba(100, 255, 170, 0.3);
+
+    padding-bottom: 12px;
+
 }
 
-.target-name strong {
 
-    color: #ffffff;
+.radar-stat {
 
-    margin-left: 5px;
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    border-bottom: 1px solid rgba(100, 255, 170, 0.1);
+
+}
+
+
+.radar-stat span {
+
+    opacity: 0.6;
+
+}
+
+
+.radar-stat strong {
+
+    color: #b8ffd5;
+
 }
 
 
@@ -1151,316 +513,125 @@ body > p {
    TERMINAL
 ========================================= */
 
-.scanner-terminal {
+.radar-terminal {
 
-    min-height: 100px;
+    margin-top: 10px;
 
     padding: 15px;
 
-    margin-bottom: 15px;
+    min-height: 120px;
 
-    background: #010708;
+    background: rgba(0, 0, 0, 0.35);
 
-    border: 1px solid rgba(0, 217, 255, 0.3);
+    border: 1px solid rgba(100, 255, 170, 0.2);
 
-    border-radius: 6px;
-
-    font-family: monospace;
+    color: #7dffad;
 
     font-size: 12px;
 
     line-height: 1.7;
 
-    color: #55ff99;
-
-    box-shadow:
-        inset 0 0 15px rgba(0, 217, 255, 0.05);
 }
 
 
 /* =========================================
-   PROGRESSION
+   LÉGENDE
 ========================================= */
 
-.scan-progress-container {
+.radar-legend {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    font-size: 12px;
+
+    opacity: 0.75;
+
+}
+
+
+.radar-legend div {
 
     display: flex;
 
     align-items: center;
 
-    gap: 10px;
-
-    margin-bottom: 15px;
-}
-
-.scan-progress-bar {
-
-    flex: 1;
-
-    height: 12px;
-
-    padding: 2px;
-
-    background: #010708;
-
-    border: 1px solid rgba(85, 255, 153, 0.4);
-
-    border-radius: 4px;
-}
-
-.scan-progress {
-
-    width: 0%;
-
-    height: 100%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #55ff99,
-            #00d9ff
-        );
-
-    border-radius: 2px;
-
-    box-shadow:
-        0 0 10px #55ff99;
-
-    transition: width 0.2s linear;
-}
-
-#scanPercent {
-
-    width: 40px;
-
-    color: #8affc1;
-
-    font-family: monospace;
-
-    font-size: 12px;
-
-    text-align: right;
-}
-
-
-
-.scan-button {
-
-    width: 100%;
-
-    padding: 13px;
-
-    background:
-        rgba(85, 255, 153, 0.08);
-
-    border: 1px solid #55ff99;
-
-    border-radius: 6px;
-
-    color: #8affc1;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
-
-    cursor: pointer;
-
-    transition: 0.25s;
-}
-
-.scan-button:hover {
-
-    background: rgba(85, 255, 153, 0.18);
-
-    box-shadow:
-        0 0 15px rgba(85, 255, 153, 0.4);
-
-    color: white;
-}
-
-.scan-button:disabled {
-
-    opacity: 0.5;
-
-    cursor: not-allowed;
-}
-
-
-
-.scan-results {
-
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
     gap: 8px;
 
-    margin-top: 15px;
-
-    opacity: 0;
-
-    transform: translateY(10px);
-
-    transition: 0.5s;
-}
-
-.scan-results.active {
-
-    opacity: 1;
-
-    transform: translateY(0);
-}
-
-.result {
-
-    padding: 10px;
-
-    background: rgba(0, 217, 255, 0.04);
-
-    border: 1px solid rgba(0, 217, 255, 0.15);
-
-    border-radius: 5px;
-}
-
-.result span {
-
-    display: block;
-
-    margin-bottom: 5px;
-
-    font-size: 9px;
-
-    color: #00d9ff;
-
-    letter-spacing: 1px;
-}
-
-.result strong {
-
-    font-size: 13px;
-
-    color: #ffffff;
-}
-
-.danger-result {
-
-    border-color: rgba(255, 60, 60, 0.3);
-}
-
-.danger-result strong {
-
-    color: #ff7777;
-
-    text-shadow:
-        0 0 8px rgba(255, 60, 60, 0.6);
 }
 
 
+.legend-dot {
 
+    width: 7px;
 
-@keyframes planetFloat {
+    height: 7px;
 
-    0%, 100% {
-        transform: translateY(0);
-    }
+    border-radius: 50%;
 
-    50% {
-        transform: translateY(-8px);
-    }
-}
+    background: #8affc1;
 
-@keyframes scannerRotate {
+    box-shadow: 0 0 8px #8affc1;
 
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes scannerRotateReverse {
-
-    from {
-        transform: rotate(360deg);
-    }
-
-    to {
-        transform: rotate(0deg);
-    }
-}
-
-@keyframes scannerPulse {
-
-    0%, 100% {
-        transform: scale(1);
-        opacity: 0.5;
-    }
-
-    50% {
-        transform: scale(1.05);
-        opacity: 1;
-    }
-}
-
-@keyframes scanLine {
-
-    0% {
-        top: 0;
-    }
-
-    50% {
-        top: 100%;
-    }
-
-    100% {
-        top: 0;
-    }
 }
 
 
+.legend-center {
+
+    width: 7px;
+
+    height: 7px;
+
+    border: 1px solid #8affc1;
+
+}
 
 
-@media (max-width: 700px) {
+/* =========================================
+   RESPONSIVE
+========================================= */
 
-    .scanner-content {
+@media (max-width: 800px) {
+
+    .radar-container {
 
         grid-template-columns: 1fr;
 
-    }
-
-    .planet-display {
-
-        min-height: 300px;
+        padding: 20px;
 
     }
 
-    .planet {
+    .radar {
 
-        width: 140px;
-        height: 140px;
-
-    }
-
-    .ring-1 {
-
-        width: 190px;
-        height: 190px;
+        width: min(450px, 100%);
 
     }
 
-    .ring-2 {
+    .radar-info {
 
-        width: 240px;
-        height: 240px;
+        width: 100%;
 
     }
 
-    .ring-3 {
+}
 
-        width: 290px;
-        height: 290px;
+
+@media (max-width: 500px) {
+
+    .radar-header {
+
+        font-size: 11px;
+
+        padding: 0 12px;
+
+    }
+
+    .radar-container {
+
+        padding: 15px;
 
     }
 
