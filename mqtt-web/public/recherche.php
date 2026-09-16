@@ -40,7 +40,7 @@ else {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Wiki Planètes</title>
-    <link rel="stylesheet" href="recherche.css">
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
