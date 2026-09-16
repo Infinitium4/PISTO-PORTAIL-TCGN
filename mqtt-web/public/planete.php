@@ -38,7 +38,7 @@ if (!$planete) {
 
 </head>
 
-<body style="overflow: hidden;">
+<body >
 
     <script>
         const ws = new WebSocket("ws://172.16.89.41:3000");
