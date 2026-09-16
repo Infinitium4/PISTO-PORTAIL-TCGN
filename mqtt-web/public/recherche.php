@@ -1,4 +1,4 @@
-```php
+
 <?php
 
 require_once 'logBDD.php';
@@ -494,4 +494,4 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
 </body>
 
 </html>
-```
+
