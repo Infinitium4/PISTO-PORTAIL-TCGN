@@ -48,7 +48,7 @@ if (!$planete) {
             const message = JSON.parse(event.data);
 
             console.error("Received data:", data);
-            console.error("Received message:", message);
+            console.error("Received message:", message.action);
 
             if (message.action === "retour"){
                 window.location.href = "/mqtt-web/public/";
