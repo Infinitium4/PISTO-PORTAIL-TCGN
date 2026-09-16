@@ -62,9 +62,24 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
         </p>
 
         <p>
-            <?= htmlspecialchars($u['info_complementaire']) ?>
+            <?= htmlspecialchars($u['dimension']) ?>
         </p>
 
+        <p>
+            <?= htmlspecialchars($u['temperature']) ?> °C
+        </p>
+
+        <p>
+            <?= htmlspecialchars($u['temperature_min']) ?> °C
+        </p>
+
+        <p>
+            <?= htmlspecialchars($u['temperature_max']) ?> °C
+        </p>
+
+        <p>
+            <?= htmlspecialchars($u['info_complementaire']) ?>
+        </p>
 
     <?php } ?>
 
