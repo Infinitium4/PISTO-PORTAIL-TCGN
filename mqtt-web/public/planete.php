@@ -203,7 +203,7 @@ if (!$planete) {
                         id="scanButton"
                         onclick="startPlanetScan()">
 
-                        ⚡ LANCER LE SCAN
+                        LANCER LE SCAN
 
                     </button>
 
