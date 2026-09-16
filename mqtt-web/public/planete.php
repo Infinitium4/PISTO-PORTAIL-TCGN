@@ -53,9 +53,9 @@ if (!$planete) {
         <section class="wiki-info">
 
             <h2>Informations générales</h2>
-
+a
             <a> 
-                <img src="<?= htmlspecialchars($planete['image']) ?>" alt="Image de <?= htmlspecialchars($planete['nom']) ?>">
+                <img src="<?= htmlspecialchars($planete['image']) ?>" alt="<?= htmlspecialchars($planete['nom']) ?>.png">
             </a>
 
             <p>
