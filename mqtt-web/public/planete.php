@@ -42,7 +42,7 @@ if (!$planete) {
 
     <main class="wiki">
 
-        <a href="rechercher.php" class="retour">
+        <a href="recherche.php" class="retour">
             ← Retour aux recherches
         </a>
 
