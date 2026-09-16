@@ -19,7 +19,23 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
     $univers = $nom->fetchAll(PDO::FETCH_ASSOC);
 }
 
+if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
+
+
+    $nom = $pdo->prepare(
+        "SELECT * FROM univers"
+    );
+
+    $nom->execute([
+        'recherche' => '%' . $recherche . '%'
+    ]);
+
+    $univers = $nom->fetchAll(PDO::FETCH_ASSOC);
+}
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="fr">
