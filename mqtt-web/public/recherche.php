@@ -49,9 +49,6 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
             Rechercher
         </button>
 
-    </form>
-    <form method="GET">
-
         <button type="submit">
             Show All
         </button>
