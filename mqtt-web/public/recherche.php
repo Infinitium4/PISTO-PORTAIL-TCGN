@@ -55,7 +55,7 @@ else {
         > 
  
         <button type="submit"> 
-            Rechercher 
+            Search 
         </button> 
  
         <button type="button" onclick="window.location.href='recherche.php'"> 
