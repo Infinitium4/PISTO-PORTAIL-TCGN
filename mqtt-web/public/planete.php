@@ -127,7 +127,6 @@ if (!$planete) {
             </div>
 
         </section>
-        
 
     </main>
 <script>

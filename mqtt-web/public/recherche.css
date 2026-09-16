@@ -1,928 +1,831 @@
-
 * {
     box-sizing: border-box;
-}
-
-html,
-body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
-    background: #020708;
-    color: #8affc1;
-    font-family: monospace;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: white;
+
+    background:
+        radial-gradient(circle at 20% 20%, rgba(70, 255, 140, 0.08), transparent 25%),
+        radial-gradient(circle at 80% 80%, rgba(0, 180, 255, 0.08), transparent 25%),
+        #050b0d;
+
     overflow-x: hidden;
 }
 
 
-/* =========================================================
-   APPLICATION
-========================================================= */
 
-.multiverse-app {
-    min-height: 100vh;
-}
 
+body::before {
+    content: "";
 
-/* =========================================================
-   HEADER
-========================================================= */
-
-.top-bar {
-    height: 64px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 25px;
-
-    background: rgba(2, 9, 11, 0.95);
-
-    border-bottom: 1px solid rgba(100, 255, 170, 0.25);
-
-    position: relative;
-    z-index: 100;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.logo-dot {
-    width: 10px;
-    height: 10px;
-
-    border-radius: 50%;
-
-    background: #7dffad;
-
-    box-shadow:
-        0 0 8px #7dffad,
-        0 0 20px #7dffad;
-
-    animation: pulse 1.5s infinite;
-}
-
-.logo strong {
-    display: block;
-
-    font-size: 14px;
-    letter-spacing: 2px;
-}
-
-.logo span:not(.logo-dot) {
-    display: block;
-
-    font-size: 9px;
-
-    opacity: 0.5;
-
-    letter-spacing: 2px;
-}
-
-.system-status {
-    font-size: 11px;
-    letter-spacing: 2px;
-
-    opacity: 0.8;
-}
-
-.status-dot {
-    display: inline-block;
-
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: #7dffad;
-
-    margin-right: 7px;
-}
-
-.fullscreen-button {
-    border: 1px solid rgba(100, 255, 170, 0.35);
-
-    background: rgba(100, 255, 170, 0.04);
-
-    color: #8affc1;
-
-    padding: 8px 13px;
-
-    cursor: pointer;
-
-    font-family: monospace;
-}
-
-.fullscreen-button:hover {
-    background: rgba(100, 255, 170, 0.12);
-}
-
-
-/* =========================================================
-   RECHERCHE
-========================================================= */
-
-.search-bar {
-    display: flex;
-
-    gap: 10px;
-
-    padding: 15px 25px;
-
-    background: rgba(1, 7, 9, 0.95);
-
-    border-bottom: 1px solid rgba(100, 255, 170, 0.15);
-}
-
-.search-input {
-    flex: 1;
-
-    display: flex;
-    align-items: center;
-
-    gap: 10px;
-
-    border: 1px solid rgba(100, 255, 170, 0.25);
-
-    padding: 0 12px;
-}
-
-.search-input span {
-    font-size: 22px;
-}
-
-.search-input input {
-    width: 100%;
-
-    background: transparent;
-
-    border: 0;
-    outline: 0;
-
-    color: #8affc1;
-
-    font-family: monospace;
-
-    padding: 12px;
-}
-
-.search-bar button {
-    background: rgba(100, 255, 170, 0.05);
-
-    color: #8affc1;
-
-    border: 1px solid rgba(100, 255, 170, 0.3);
-
-    padding: 0 18px;
-
-    font-family: monospace;
-
-    cursor: pointer;
-}
-
-.search-bar button:hover {
-    background: rgba(100, 255, 170, 0.15);
-}
-
-
-/* =========================================================
-   MULTIVERSE
-========================================================= */
-
-.multiverse {
-    position: relative;
-
-    height: calc(100vh - 120px);
-
-    min-height: 650px;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(30, 150, 90, 0.08),
-            transparent 40%
-        ),
-        #020708;
-}
-
-
-/* =========================================================
-   CANVAS
-========================================================= */
-
-#multiverseCanvas {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    cursor: grab;
-}
-
-#multiverseCanvas:active {
-    cursor: grabbing;
-}
-
-
-/* =========================================================
-   SCANLINES
-========================================================= */
-
-.scanlines {
-    position: absolute;
+    position: fixed;
 
     inset: 0;
 
     pointer-events: none;
 
-    opacity: 0.08;
+    z-index: -3;
 
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(100, 255, 170, 0.15) 4px
-        );
+    background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(#8affc1 1px, transparent 1px);
+
+    background-size:
+        120px 120px,
+        220px 220px;
+
+    background-position:
+        20px 30px,
+        100px 150px;
+
+    opacity: 0.35;
+
+    animation: stars 30s linear infinite;
+}
+
+@keyframes stars {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(120px);
+    }
 }
 
 
-/* =========================================================
-   COINS
-========================================================= */
 
-.corner {
-    position: absolute;
 
-    width: 35px;
-    height: 35px;
+body::after {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
 
     pointer-events: none;
+
+    z-index: -2;
+
+    background-image:
+        url("images/morty.png"),
+        url("images/rick.png");
+
+    background-repeat:
+        no-repeat,
+        no-repeat;
+
+    background-size:
+        210px,
+        210px;
+
+    background-position:
+        10% 70%,
+        90% 70%;
+
+    opacity: 0.75;
+
+    animation: characters 14s ease-in-out infinite;
 }
 
-.corner-tl {
-    top: 20px;
-    left: 20px;
+@keyframes characters {
 
-    border-top: 1px solid #8affc1;
-    border-left: 1px solid #8affc1;
+    0% {
+        background-position:
+            10% 70%,
+            95% 75%;
+    }
+
+    25% {
+        background-position:
+            15% 65%,
+            100% 70%;
+    }
+
+    50% {
+        background-position:
+            20% 75%,
+            95% 80%;
+    }
+
+    75% {
+        background-position:
+            15% 80%,
+            100% 85%;
+    }
+
+    100% {
+        background-position:
+            10% 70%,
+            95% 75%;
+    }
 }
 
-.corner-tr {
-    top: 20px;
-    right: 20px;
-
-    border-top: 1px solid #8affc1;
-    border-right: 1px solid #8affc1;
-}
-
-.corner-bl {
-    bottom: 20px;
-    left: 20px;
-
-    border-bottom: 1px solid #8affc1;
-    border-left: 1px solid #8affc1;
-}
-
-.corner-br {
-    bottom: 20px;
-    right: 20px;
-
-    border-bottom: 1px solid #8affc1;
-    border-right: 1px solid #8affc1;
-}
-
-
-/* =========================================================
-   TITRE
-========================================================= */
-
-.universe-title {
-    position: absolute;
-
-    top: 25px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
+body > h1 {
     text-align: center;
 
-    pointer-events: none;
+    margin-bottom: 40px;
 
-    z-index: 5;
-}
+    font-size: 55px;
 
-.universe-title span {
-    font-size: 10px;
+    color: #8affc1;
 
-    letter-spacing: 4px;
-
-    opacity: 0.45;
-}
-
-.universe-title h1 {
-    margin: 4px 0;
-
-    font-size: 36px;
-
-    letter-spacing: 8px;
+    letter-spacing: 2px;
 
     text-shadow:
-        0 0 10px rgba(100, 255, 170, 0.7),
-        0 0 30px rgba(100, 255, 170, 0.3);
+        0 0 10px #55ff99,
+        0 0 25px rgba(85, 255, 153, 0.8),
+        0 0 50px rgba(85, 255, 153, 0.3);
+
+    animation: titleGlow 3s ease-in-out infinite alternate;
 }
 
-.universe-title p {
-    margin: 0;
+@keyframes titleGlow {
 
-    font-size: 9px;
+    from {
+        text-shadow:
+            0 0 10px #55ff99,
+            0 0 25px rgba(85, 255, 153, 0.5);
+    }
 
-    letter-spacing: 3px;
-
-    opacity: 0.4;
+    to {
+        text-shadow:
+            0 0 15px #55ff99,
+            0 0 35px rgba(85, 255, 153, 0.9),
+            0 0 60px rgba(85, 255, 153, 0.4);
+    }
 }
 
 
-/* =========================================================
-   PANNEAUX
-========================================================= */
 
-.side-panel {
-    position: absolute;
 
-    top: 125px;
+form {
+    width: 90%;
 
-    width: 210px;
+    max-width: 800px;
+
+    margin: 0 auto 50px;
+
+    display: flex;
+
+    gap: 12px;
 
     padding: 15px;
 
-    background: rgba(2, 12, 14, 0.75);
+    background: rgba(10, 25, 28, 0.85);
 
-    border: 1px solid rgba(100, 255, 170, 0.2);
+    border: 1px solid rgba(85, 255, 153, 0.4);
 
-    backdrop-filter: blur(5px);
+    border-radius: 18px;
 
-    z-index: 10;
-}
+    box-shadow:
+        0 0 20px rgba(85, 255, 153, 0.15);
 
-.left-panel {
-    left: 35px;
-}
-
-.right-panel {
-    right: 35px;
-}
-
-.panel-title {
-    font-size: 10px;
-
-    letter-spacing: 3px;
-
-    border-bottom: 1px solid rgba(100, 255, 170, 0.2);
-
-    padding-bottom: 10px;
-
-    margin-bottom: 10px;
-}
-
-.system-line,
-.telemetry-line {
-    display: flex;
-
-    justify-content: space-between;
-
-    padding: 7px 0;
-
-    border-bottom: 1px solid rgba(100, 255, 170, 0.08);
-
-    font-size: 10px;
-}
-
-.system-line span,
-.telemetry-line span {
-    opacity: 0.4;
-}
-
-.system-line strong,
-.telemetry-line strong {
-    color: #baffd5;
-}
-
-.stability-bar {
-    height: 4px;
-
-    margin-top: 12px;
-
-    background: rgba(100, 255, 170, 0.1);
-}
-
-.stability-bar div {
-    width: 100%;
-
-    height: 100%;
-
-    background: #7dffad;
-
-    box-shadow: 0 0 10px #7dffad;
-
-    transition: width 0.5s;
+    backdrop-filter: blur(10px);
 }
 
 
-/* =========================================================
-   TERMINAL
-========================================================= */
 
-.terminal {
-    position: absolute;
 
-    left: 35px;
-    bottom: 35px;
+form input {
+    flex: 1;
 
-    width: 330px;
+    min-width: 0;
 
-    background: rgba(1, 8, 10, 0.8);
+    padding: 15px 18px;
 
-    border: 1px solid rgba(100, 255, 170, 0.2);
+    border: 2px solid rgba(85, 255, 153, 0.3);
 
-    z-index: 10;
+    border-radius: 10px;
+
+    outline: none;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    color: white;
+
+    font-size: 16px;
+
+    transition: 0.25s;
 }
 
-.terminal-header {
-    padding: 9px;
-
-    border-bottom: 1px solid rgba(100, 255, 170, 0.15);
-
-    font-size: 9px;
-
-    letter-spacing: 2px;
+form input::placeholder {
+    color: #8b9a96;
 }
 
-.terminal-dot {
+form input:focus {
+    border-color: #55ff99;
+
+    box-shadow:
+        0 0 10px rgba(85, 255, 153, 0.5),
+        inset 0 0 10px rgba(85, 255, 153, 0.05);
+}
+
+
+
+
+form button {
+    padding: 0 22px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #55ff99,
+        #20c978
+    );
+
+    color: #03100a;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+
+    white-space: nowrap;
+}
+
+form button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 15px rgba(85, 255, 153, 0.7);
+}
+
+form button:active {
+    transform: translateY(0);
+}
+
+
+
+body > h2,
+.planete-card {
+    width: 90%;
+
+    max-width: 900px;
+
+    margin: 20px auto;
+}
+
+
+
+
+body > h2 {
+    padding: 20px 25px;
+
+    background: rgba(10, 25, 28, 0.85);
+
+    border-left: 4px solid #55ff99;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 0 15px rgba(85, 255, 153, 0.12);
+}
+
+body > h2 a {
+    color: #8affc1;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+body > h2 a:hover {
+    color: white;
+
+    text-shadow:
+        0 0 10px #55ff99,
+        0 0 25px #55ff99;
+}
+
+
+
+
+body > p {
+    width: 90%;
+
+    max-width: 850px;
+
+    margin: 10px auto;
+
+    color: #d4ded9;
+
+    line-height: 1.6;
+}
+
+
+
+.wiki {
+    width: 90%;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    padding: 0px
+}
+
+
+
+
+.retour {
     display: inline-block;
 
-    width: 6px;
-    height: 6px;
-
-    border-radius: 50%;
-
-    background: #7dffad;
-
-    margin-right: 6px;
-}
-
-.terminal-content {
-    padding: 12px;
-
-    min-height: 100px;
-
-    font-size: 10px;
-
-    line-height: 1.8;
-
-    color: #72f5aa;
-}
-
-
-/* =========================================================
-   CONTROLES
-========================================================= */
-
-.controls {
     position: absolute;
 
-    right: 35px;
-    bottom: 35px;
+    top: 41px;
+    left: 55px;
 
+    padding: 12px 20px;
+
+    color: #8affc1;
+
+    text-decoration: none;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    background: rgba(10, 25, 28, 0.85);
+
+    border: 1px solid rgba(85, 255, 153, 0.4);
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 0 15px rgba(85, 255, 153, 0.12);
+
+    backdrop-filter: blur(10px);
+
+    transition: 0.25s;
+}
+
+.retour:hover {
+    color: white;
+
+    transform: translateX(-6px);
+
+    border-color: #55ff99;
+
+    box-shadow:
+        0 0 20px rgba(85, 255, 153, 0.35);
+
+    text-shadow:
+        0 0 10px #55ff99;
+}
+
+
+
+
+.wiki h1 {
+    margin-bottom: 45px;
+
+    padding-bottom: 20px;
+
+    font-size: 65px;
+
+    color: #8affc1;
+
+    border-bottom: 2px solid #55ff99;
+
+    text-shadow:
+        0 0 10px #55ff99,
+        0 0 30px rgba(85, 255, 153, 0.7);
+}
+
+
+
+
+.wiki-info {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 25px;
+
+    padding: 35px;
+
+    background: rgba(7, 17, 20, 0.92);
+
+    border: 1px solid rgba(85, 255, 153, 0.45);
+
+    border-radius: 25px;
+
+    box-shadow:
+        0 0 25px rgba(85, 255, 153, 0.18),
+        inset 0 0 30px rgba(85, 255, 153, 0.03);
+
+    backdrop-filter: blur(12px);
+}
+
+
+
+.image-planete {
+    display: block;
+
+    width: 100%;
+
+    max-width: 450px;
+
+    height: 450px;
+
+    margin: 0 auto 30px;
+
+    object-fit: contain;
+
+    border-radius: 20px;
+
+    filter:
+        drop-shadow(0 0 15px rgba(85, 255, 153, 0.45));
+
+    transition: 0.4s;
+}
+
+.image-planete:hover {
+    transform: scale(1.04) rotate(1deg);
+
+    filter:
+        drop-shadow(0 0 25px rgba(85, 255, 153, 0.8));
+}
+
+
+
+.wiki-info h2 {
+    margin-bottom: 20px;
+
+    color: #8affc1;
+
+    font-size: 28px;
+
+    text-shadow:
+        0 0 8px rgba(85, 255, 153, 0.4);
+}
+
+
+
+
+.wiki-info p {
+    margin-bottom: 30px;
+
+    color: #dce5e1;
+
+    font-size: 18px;
+
+    line-height: 1.7;
+}
+
+.wiki-info strong {
+    color: #8affc1;
+}
+
+
+
+
+.wiki-info p {
+    padding: 15px 18px;
+
+    background: rgba(85, 255, 153, 0.04);
+
+    border-left: 3px solid rgba(85, 255, 153, 0.5);
+
+    border-radius: 8px;
+}
+
+.dangerometre {
+    margin-top: 30px;
+
+    padding: 25px;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(85, 255, 153, 0.08),
+            transparent 65%
+        ),
+        rgba(3, 12, 15, 0.95);
+
+    border: 2px solid #55ff99;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 0 10px rgba(85, 255, 153, 0.4),
+        0 0 30px rgba(85, 255, 153, 0.15),
+        inset 0 0 25px rgba(85, 255, 153, 0.05);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* Petit effet lumineux qui traverse le dangeromètre */
+
+.dangerometre::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 50%;
+    height: 2px;
+
+    background: #8affc1;
+
+    box-shadow:
+        0 0 10px #55ff99,
+        0 0 20px #55ff99;
+
+    animation: scanner 3s linear infinite;
+}
+
+@keyframes scanner {
+
+    0% {
+        left: -50%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+
+
+.dangerometre h2 {
+    margin-bottom: 20px;
+
+    color: #8affc1;
+
+    font-size: 26px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    text-shadow:
+        0 0 5px #55ff99,
+        0 0 15px rgba(85, 255, 153, 0.7);
+}
+
+
+/* Barre */
+
+.danger-bar {
+    width: 100%;
+
+    height: 28px;
+
+    padding: 4px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            rgba(85, 255, 153, 0.08) 0px,
+            rgba(85, 255, 153, 0.08) 8px,
+            transparent 8px,
+            transparent 14px
+        ),
+        #020708;
+
+    border: 1px solid rgba(138, 255, 193, 0.6);
+
+    border-radius: 6px;
+
+    overflow: hidden;
+
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.9),
+        0 0 10px rgba(85, 255, 153, 0.2);
+}
+
+
+/* Niveau de danger */
+
+.danger-progress {
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #55ff99 0%,
+            #55ff99 25%,
+            #ffe600 50%,
+            #ff8c00 75%,
+            #ff3333 100%
+        );
+
+    border-radius: 3px;
+
+    box-shadow:
+        0 0 8px #55ff99,
+        0 0 15px rgba(255, 50, 50, 0.5);
+
+    transition: width 0.8s ease;
+
+    position: relative;
+}
+
+
+/* Petites lignes futuristes sur la jauge */
+
+.danger-progress::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 10px,
+            rgba(255,255,255,0.25) 10px,
+            rgba(255,255,255,0.25) 11px
+        );
+
+    animation: dangerScan 1s linear infinite;
+}
+
+@keyframes dangerScan {
+
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(20px);
+    }
+}
+
+
+.dangerometre p {
+    margin-top: 15px;
+
+    padding: 10px;
+
+    color: #ff7777;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    letter-spacing: 1px;
+
+    background: rgba(255, 50, 50, 0.06);
+
+    border: 1px solid rgba(255, 80, 80, 0.2);
+
+    border-radius: 8px;
+
+    text-shadow:
+        0 0 8px rgba(255, 50, 50, 0.6);
+}
+
+.planete-card {
+    width: 90%;
+    max-width: 900px;
+
+    margin: 30px auto;
+    padding: 25px;
+
+    background: rgba(7, 17, 20, 0.92);
+
+    border: 1px solid rgba(85, 255, 153, 0.45);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 0 20px rgba(85, 255, 153, 0.15),
+        inset 0 0 20px rgba(85, 255, 153, 0.03);
+
+    backdrop-filter: blur(10px);
+}
+
+
+.planete-card h2 {
+    margin-bottom: 20px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid rgba(85, 255, 153, 0.3);
+}
+
+
+.planete-card h2 a {
+    color: #8affc1;
+
+    text-decoration: none;
+
+    font-size: 28px;
+
+    transition: 0.25s;
+}
+
+
+.planete-card h2 a:hover {
+    color: white;
+
+    text-shadow:
+        0 0 10px #55ff99;
+}
+
+
+.planete-info {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+
+.info {
     display: flex;
 
     flex-direction: column;
 
-    gap: 8px;
-
-    width: 230px;
-
-    z-index: 10;
-}
-
-.controls button {
-    padding: 12px;
-
-    font-family: monospace;
-
-    font-size: 10px;
-
-    letter-spacing: 1px;
-
-    cursor: pointer;
-
-    background: rgba(5, 20, 18, 0.8);
-
-    color: #8affc1;
-
-    border: 1px solid rgba(100, 255, 170, 0.3);
-}
-
-.controls button:hover {
-    background: rgba(100, 255, 170, 0.12);
-}
-
-.danger-control {
-    color: #ff7777 !important;
-
-    border-color: rgba(255, 80, 80, 0.4) !important;
-}
-
-.reset-control {
-    opacity: 0.6;
-}
-
-
-/* =========================================================
-   COMPTEUR
-========================================================= */
-
-.dimension-counter {
-    position: absolute;
-
-    top: 125px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    text-align: center;
-
-    z-index: 5;
-
-    pointer-events: none;
-}
-
-.dimension-counter span {
-    display: block;
-
-    font-size: 9px;
-
-    letter-spacing: 3px;
-
-    opacity: 0.35;
-}
-
-.dimension-counter strong {
-    display: block;
-
-    font-size: 24px;
-
-    margin-top: 4px;
-}
-
-
-/* =========================================================
-   AIDE
-========================================================= */
-
-.help {
-    position: absolute;
-
-    bottom: 15px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    font-size: 8px;
-
-    letter-spacing: 1px;
-
-    opacity: 0.3;
-
-    z-index: 10;
-}
-
-
-/* =========================================================
-   POPUP
-========================================================= */
-
-.planet-popup {
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    width: 300px;
-
-    transform:
-        translate(-50%, -50%)
-        scale(0.8);
-
-    padding: 22px;
-
-    background:
-        radial-gradient(
-            circle at top,
-            rgba(60, 255, 150, 0.08),
-            transparent 60%
-        ),
-        rgba(2, 12, 14, 0.97);
-
-    border: 1px solid rgba(100, 255, 170, 0.5);
-
-    box-shadow:
-        0 0 30px rgba(100, 255, 170, 0.2);
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    transition:
-        opacity 0.25s,
-        transform 0.25s;
-
-    z-index: 50;
-}
-
-.planet-popup.active {
-    opacity: 1;
-
-    transform:
-        translate(-50%, -50%)
-        scale(1);
-
-    pointer-events: auto;
-}
-
-.popup-close {
-    position: absolute;
-
-    top: 8px;
-    right: 10px;
-
-    background: transparent;
-
-    border: 0;
-
-    color: #8affc1;
-
-    font-size: 22px;
-
-    cursor: pointer;
-}
-
-.popup-label {
-    font-size: 8px;
-
-    letter-spacing: 3px;
-
-    opacity: 0.4;
-}
-
-.planet-popup h2 {
-    margin: 8px 0 20px;
-
-    font-size: 25px;
-
-    text-shadow: 0 0 10px rgba(100, 255, 170, 0.5);
-}
-
-.popup-data > div {
-    display: flex;
-
-    justify-content: space-between;
-
-    padding: 8px 0;
-
-    border-bottom: 1px solid rgba(100, 255, 170, 0.1);
-
-    font-size: 10px;
-}
-
-.popup-data span {
-    opacity: 0.4;
-}
-
-.open-planet {
-    width: 100%;
-
-    margin-top: 18px;
-
-    padding: 11px;
-
-    background: rgba(100, 255, 170, 0.08);
-
-    border: 1px solid rgba(100, 255, 170, 0.35);
-
-    color: #8affc1;
-
-    font-family: monospace;
-
-    cursor: pointer;
-}
-
-
-/* =========================================================
-   COLLAPSE
-========================================================= */
-
-.collapse-overlay {
-    position: absolute;
-
-    inset: 0;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    background: rgba(50, 0, 0, 0.75);
-
-    backdrop-filter: blur(3px);
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    transition: opacity 0.4s;
-
-    z-index: 90;
-}
-
-.collapse-overlay.active {
-    opacity: 1;
-
-    pointer-events: auto;
-}
-
-.collapse-message {
-    text-align: center;
-
-    animation: dangerPulse 0.6s infinite alternate;
-}
-
-.collapse-message > span {
-    font-size: 40px;
-
-    color: #ff6666;
-}
-
-.collapse-message h2 {
-    margin: 5px 0;
-
-    font-size: 38px;
-
-    letter-spacing: 5px;
-
-    color: #ff7777;
-}
-
-.collapse-message p {
-    font-size: 11px;
-
-    letter-spacing: 3px;
-}
-
-.collapse-message strong {
-    display: block;
-
-    font-size: 50px;
-
-    color: #ff7777;
-}
-
-
-/* =========================================================
-   LISTE
-========================================================= */
-
-.planet-results {
-    padding: 40px;
-
-    background: #020708;
-}
-
-.planete-card {
-    display: inline-block;
-
-    vertical-align: top;
-
-    width: 250px;
-
-    margin: 10px;
+    gap: 6px;
 
     padding: 15px;
 
-    border: 1px solid rgba(100, 255, 170, 0.15);
+    background: rgba(85, 255, 153, 0.04);
 
-    background: rgba(100, 255, 170, 0.03);
+    border-left: 3px solid rgba(85, 255, 153, 0.5);
+
+    border-radius: 8px;
 }
 
-.planete-card h2 {
-    margin-top: 0;
-}
 
-.planete-card a {
+.info strong {
     color: #8affc1;
 
-    text-decoration: none;
+    font-size: 15px;
 }
 
-.no-results {
+
+.info span {
+    color: #dce5e1;
+
+    font-size: 17px;
+
+    line-height: 1.5;
+}
+
+
+.info.description {
+    grid-column: 1 / -1;
+}
+
+
+.aucune-planete {
+    width: 90%;
+    max-width: 900px;
+
+    margin: 30px auto;
+
+    padding: 20px;
+
+    color: #ff7777;
+
     text-align: center;
+
+    background: rgba(255, 50, 50, 0.08);
+
+    border: 1px solid rgba(255, 80, 80, 0.4);
+
+    border-radius: 12px;
 }
 
 
-/* =========================================================
-   ANIMATIONS
-========================================================= */
+@media (max-width: 700px) {
 
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
+    .planete-info {
+        grid-template-columns: 1fr;
     }
 
-    50% {
-        opacity: 0.3;
-    }
-
-}
-
-@keyframes dangerPulse {
-
-    from {
-        transform: scale(1);
-    }
-
-    to {
-        transform: scale(1.04);
-    }
-
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width: 900px) {
-
-    .side-panel {
-        display: none;
-    }
-
-    .terminal {
-        left: 20px;
-        bottom: 20px;
-    }
-
-    .controls {
-        right: 20px;
-        bottom: 20px;
-    }
-
-}
-
-@media (max-width: 650px) {
-
-    .system-status {
-        display: none;
-    }
-
-    .search-bar {
-        flex-wrap: wrap;
-    }
-
-    .search-input {
-        width: 100%;
-        flex-basis: 100%;
-    }
-
-    .multiverse {
-        min-height: 700px;
-    }
-
-    .terminal {
-        width: calc(100% - 40px);
-    }
-
-    .controls {
-        bottom: 155px;
-        width: calc(100% - 40px);
-    }
-
-    .universe-title h1 {
-        font-size: 25px;
+    .info.description {
+        grid-column: auto;
     }
 
 }
