@@ -16,6 +16,8 @@
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
 
+            console.error("Received message:", data);
+
             const nomVideo = data.message.trim() + ".mp4";
 
             video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
