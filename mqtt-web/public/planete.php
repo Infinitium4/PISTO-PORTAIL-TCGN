@@ -51,40 +51,50 @@ if (!$planete) {
         </h1>
 
         <section class="wiki-info">
+            <div>
+                <img
+                    class="image-planete"
+                    src="images/<?= htmlspecialchars($planete['nom']) ?>.png"
+                    alt="<?= htmlspecialchars($planete['nom']) ?>"
+                >
+            </div>
 
-            <h2>Informations générales</h2>
-            <a> 
-                <img src="images/<?= htmlspecialchars($planete['nom']) ?>.png" alt="<?= htmlspecialchars($planete['nom']) ?>">
-            </a>
+            <div>
 
-            <p>
-                Température :
-                <?= htmlspecialchars($planete['temperature']) ?> °C
-            </p>
+                <h2>Informations générales</h2>
 
-            <p>
-                Cette planète se trouve dans la dimension :
-                <?= htmlspecialchars($planete['dimension']) ?>
-            </p>
+                <p>
+                    Température :
+                    <?= htmlspecialchars($planete['temperature']) ?> °C
+                </p>
 
-            <p>
-                Température en temps réel :
-                <?= htmlspecialchars($planete['temperature']) ?> °C
-            </p>
+                <p>
+                    Cette planète se trouve dans la dimension :
+                    <?= htmlspecialchars($planete['dimension']) ?>
+                </p>
 
-            <p>
-                Température minimale :
-                <?= htmlspecialchars($planete['temperature_min']) ?> °C
-            </p>
+                <p>
+                    Température en temps réel :
+                    <?= htmlspecialchars($planete['temperature']) ?> °C
+                </p>
 
-            <p>
-                Température maximale :
-                <?= htmlspecialchars($planete['temperature_max']) ?> °C
-            </p>
+                <p>
+                    Température minimale :
+                    <?= htmlspecialchars($planete['temperature_min']) ?> °C
+                </p>
 
-            <p>
-                <?= htmlspecialchars($planete['info_complementaire']) ?>
-            </p>
+                <p>
+                    Température maximale :
+                    <?= htmlspecialchars($planete['temperature_max']) ?> °C
+                </p>
+
+                <h2>Description</h2>
+
+                <p>
+                    <?= nl2br(htmlspecialchars($planete['info_complementaire'])) ?>
+                </p>
+
+            </div>
 
         </section>
 
