@@ -1,3 +1,4 @@
+
 function startPlanetScan() {
 
     const button = document.getElementById("scanButton");
@@ -14,6 +15,27 @@ function startPlanetScan() {
     const stability = document.getElementById("stability");
     const danger = document.getElementById("danger");
 
+    /*
+     * Sécurité : vérification des éléments
+     */
+
+    if (
+        !button ||
+        !progress ||
+        !percent ||
+        !scanText ||
+        !results ||
+        !planetName
+    ) {
+        console.error("Erreur : éléments du scanner introuvables.");
+        return;
+    }
+
+
+    /*
+     * Désactivation du bouton pendant le scan
+     */
+
     button.disabled = true;
 
     results.classList.remove("active");
@@ -22,58 +44,53 @@ function startPlanetScan() {
 
     percent.textContent = "0%";
 
+
     /*
-     * Génération d'une planète aléatoire
+     * Récupération du vrai nom de la planète
+     * depuis le <h1> de ta page PHP
      */
 
-    const prefixes = [
-        "Xan",
-        "Zor",
-        "Blip",
-        "Cron",
-        "Vort",
-        "Gaz",
-        "Meep",
-        "Kron"
-    ];
+    const pagePlanetName =
+        document.querySelector(".wiki h1");
 
-    const suffixes = [
-        "-42",
-        "-137",
-        "-7",
-        "-900",
-        "-B",
-        "-X",
-        "-Prime",
-        "-666"
-    ];
+    if (pagePlanetName) {
 
-    const randomPrefix =
-        prefixes[Math.floor(Math.random() * prefixes.length)];
+        planetName.textContent =
+            pagePlanetName.textContent.trim();
 
-    const randomSuffix =
-        suffixes[Math.floor(Math.random() * suffixes.length)];
+    } else {
 
-    planetName.textContent =
-        randomPrefix + randomSuffix;
+        planetName.textContent = "INCONNUE";
+
+    }
 
 
     /*
-     * Coordonnées dimensionnelles
+     * Génération des coordonnées dimensionnelles
      */
 
-    document.getElementById("coordX").textContent =
-        Math.floor(Math.random() * 999);
+    const coordX = document.getElementById("coordX");
+    const coordY = document.getElementById("coordY");
+    const coordZ = document.getElementById("coordZ");
 
-    document.getElementById("coordY").textContent =
-        Math.floor(Math.random() * 999);
+    if (coordX) {
+        coordX.textContent =
+            Math.floor(Math.random() * 999);
+    }
 
-    document.getElementById("coordZ").textContent =
-        Math.floor(Math.random() * 999);
+    if (coordY) {
+        coordY.textContent =
+            Math.floor(Math.random() * 999);
+    }
+
+    if (coordZ) {
+        coordZ.textContent =
+            Math.floor(Math.random() * 999);
+    }
 
 
     /*
-     * Étapes du scanner
+     * Texte affiché pendant le scan
      */
 
     const steps = [
@@ -95,6 +112,18 @@ function startPlanetScan() {
     ];
 
 
+    /*
+     * Réinitialisation du terminal
+     */
+
+    scanText.innerHTML =
+        "> Initialisation du scanner...";
+
+
+    /*
+     * Variables de progression
+     */
+
     let progressValue = 0;
 
     let stepIndex = 0;
@@ -108,15 +137,25 @@ function startPlanetScan() {
 
         progressValue++;
 
+
+        /*
+         * Barre de progression
+         */
+
         progress.style.width =
             progressValue + "%";
+
+
+        /*
+         * Pourcentage
+         */
 
         percent.textContent =
             progressValue + "%";
 
 
         /*
-         * Changement de texte
+         * Affichage des différentes étapes
          */
 
         if (
@@ -155,13 +194,21 @@ function startPlanetScan() {
 
     function generateResults() {
 
+
+        /*
+         * Atmosphères possibles
+         */
+
         const atmospheres = [
+
             "OXYGÈNE",
             "MÉTHANE",
             "TOXIQUE",
             "INCONNUE",
             "AZOTE"
+
         ];
+
 
         const atmosphereValue =
             atmospheres[
@@ -171,11 +218,19 @@ function startPlanetScan() {
             ];
 
 
+        /*
+         * Population
+         */
+
         const populationValue =
             Math.floor(
                 Math.random() * 9000000
             );
 
+
+        /*
+         * Formes de vie
+         */
 
         const lifeValue =
             Math.floor(
@@ -183,11 +238,19 @@ function startPlanetScan() {
             );
 
 
+        /*
+         * Stabilité dimensionnelle
+         */
+
         const stabilityValue =
             Math.floor(
                 Math.random() * 100
             );
 
+
+        /*
+         * Niveau de danger
+         */
 
         const dangerValue =
             Math.floor(
@@ -195,25 +258,66 @@ function startPlanetScan() {
             );
 
 
-        atmosphere.textContent =
-            atmosphereValue;
+        /*
+         * Affichage des résultats
+         */
 
-        population.textContent =
-            populationValue.toLocaleString("fr-FR");
+        if (atmosphere) {
 
-        lifeforms.textContent =
-            lifeValue;
+            atmosphere.textContent =
+                atmosphereValue;
 
-        stability.textContent =
-            stabilityValue + "%";
+        }
 
-        danger.textContent =
-            dangerValue + "%";
 
+        if (population) {
+
+            population.textContent =
+                populationValue.toLocaleString("fr-FR");
+
+        }
+
+
+        if (lifeforms) {
+
+            lifeforms.textContent =
+                lifeValue;
+
+        }
+
+
+        if (stability) {
+
+            stability.textContent =
+                stabilityValue + "%";
+
+        }
+
+
+        if (danger) {
+
+            danger.textContent =
+                dangerValue + "%";
+
+        }
+
+
+        /*
+         * Affichage du bloc de résultats
+         */
 
         results.classList.add("active");
+
+
+        /*
+         * Message final
+         */
+
+        scanText.innerHTML +=
+            "<br><br>> SCAN TERMINÉ." +
+            "<br>> Données récupérées avec succès.";
+
 
     }
 
 }
-
