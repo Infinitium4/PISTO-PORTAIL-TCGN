@@ -60,7 +60,7 @@ else {
             Rechercher
         </button>
 
-        <button type="button" onclick="window.location.href='rechercher.php'">
+        <button type="button" onclick="window.location.href='recherche.php'">
             Show All
         </button>
 
