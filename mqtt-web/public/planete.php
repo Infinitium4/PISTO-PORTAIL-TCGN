@@ -54,7 +54,7 @@ if (!$planete) {
 
             <h2>Informations générales</h2>
             <a> 
-                <img src="<?= htmlspecialchars($planete['nom']) ?>.png" alt="<?= htmlspecialchars($planete['nom']) ?>">
+                <img src="images/<?= htmlspecialchars($planete['nom']) ?>.png" alt="<?= htmlspecialchars($planete['nom']) ?>">
             </a>
 
             <p>
