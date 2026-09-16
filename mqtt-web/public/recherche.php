@@ -82,11 +82,6 @@ else {
                     <span><?= htmlspecialchars($u['dimension']) ?></span> 
                 </div> 
  
-                <div class="info description"> 
-                    <strong>Informations complémentaires :</strong> 
-                    <span><?= htmlspecialchars($u['info_complementaire']) ?></span> 
-                </div> 
- 
             </div> 
  
         </div> 
