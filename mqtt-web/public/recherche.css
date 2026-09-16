@@ -518,6 +518,18 @@ body > p {
     border: 1px solid rgba(255, 80, 80, 0.4);
 
     border-radius: 15px;
+
+    cursor: url("images/morty-cursor.png") 16 16, auto;
+
+    transition: 0.3s;
+}
+
+.dangerometre:hover {
+    border-color: #ff5555;
+
+    box-shadow:
+        0 0 15px rgba(255, 80, 80, 0.3),
+        inset 0 0 20px rgba(255, 80, 80, 0.05);
 }
 
 .dangerometre h2 {
