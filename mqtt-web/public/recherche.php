@@ -70,7 +70,11 @@ else {
 
     <?php foreach ($univers as $u) { ?>
 
-        <h2><?= htmlspecialchars($u['nom']) ?></h2>
+        <h2>
+            <a href="planete.php?id=<?= $u['id'] ?>">
+                <?= htmlspecialchars($u['nom']) ?>
+            </a>
+        </h2>
 
         <p>
             Température :
