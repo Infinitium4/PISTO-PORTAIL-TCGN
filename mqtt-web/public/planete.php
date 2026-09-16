@@ -51,7 +51,7 @@ if (!$planete) {
             console.error("Received message:", message);
 
             if (message.action === "retour"){
-                window.location.href = "/";
+                window.location.href = "/mqtt-web/public/";
             }
         };
     </script>

@@ -15,7 +15,6 @@
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-
             const message = JSON.parse(data.message);
 
             console.error("Received data:", data);
@@ -34,7 +33,7 @@
             }
 
             if (message.action === "wiki"){
-                window.location.href = "/planete.php?nom=" + encodeURIComponent(message.dimension);
+                window.location.href = "/mqtt-web/public/planete.php?nom=" + encodeURIComponent(message.dimension);
             }
         };
 
