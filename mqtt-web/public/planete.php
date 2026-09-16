@@ -45,16 +45,16 @@ if (!$planete) {
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            const message = JSON.parse(event.data);
 
-            console.error("Received message:", data);
+            console.error("Received data:", data);
+            console.error("Received message:", message);
 
-            if (data.action === "retour"){
+            if (message.action === "retour"){
                 window.location.href = "/";
             }
         };
-
     </script>
-
     <main class="wiki">
 
         <a href="recherche.php" class="retour">
