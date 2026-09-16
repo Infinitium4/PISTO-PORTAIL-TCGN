@@ -62,9 +62,28 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
         </p>
 
         <p>
-            <?= htmlspecialchars($u['info_complementaire']) ?>
+            Cette planète se trouve dans la dimension :
+            <?= htmlspecialchars($u['dimension']) ?>
         </p>
 
+        <p>
+            Température en temps réel :
+            <?= htmlspecialchars($u['temperature']) ?> °C
+        </p>
+
+        <p>
+            Température minimale :
+            <?= htmlspecialchars($u['temperature_min']) ?> °C
+        </p>
+
+        <p>
+            Température maximale :
+            <?= htmlspecialchars($u['temperature_max']) ?> °C
+        </p>
+
+        <p>
+            <?= htmlspecialchars($u['info_complementaire']) ?>
+        </p>
 
     <?php } ?>
 
