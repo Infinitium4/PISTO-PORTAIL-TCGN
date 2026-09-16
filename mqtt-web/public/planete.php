@@ -40,6 +40,21 @@ if (!$planete) {
 
 <body>
 
+    <script>
+        const ws = new WebSocket("ws://172.16.89.41:3000");
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            console.error("Received message:", data);
+
+            if (data.action === "retour"){
+                window.location.href = "/";
+            }
+        };
+
+    </script>
+
     <main class="wiki">
 
         <a href="recherche.php" class="retour">
