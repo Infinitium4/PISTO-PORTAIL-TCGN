@@ -1,39 +1,88 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    console.log("MULTIVERSE JS chargé");
+    console.log("================================");
+    console.log("MULTIVERSE SYSTEM INITIALIZING");
+    console.log("================================");
 
-    const canvas = document.getElementById("multiverseCanvas");
-    const ctx = canvas.getContext("2d");
 
-    const terminal = document.getElementById("terminal");
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
 
-    const dimensionCount = document.getElementById("dimensionCount");
-    const signatureCount = document.getElementById("signatureCount");
-    const activeRealities = document.getElementById("activeRealities");
+    const canvas =
+        document.getElementById("multiverseCanvas");
 
-    const systemStatus = document.getElementById("systemStatus");
-    const stabilityValue = document.getElementById("stabilityValue");
-    const stabilityBar = document.getElementById("stabilityBar");
+    const ctx =
+        canvas.getContext("2d");
 
-    const telemetryX = document.getElementById("telemetryX");
-    const telemetryY = document.getElementById("telemetryY");
-    const telemetryZ = document.getElementById("telemetryZ");
 
-    const simulateButton = document.getElementById("simulateButton");
-    const collapseButton = document.getElementById("collapseButton");
-    const resetButton = document.getElementById("resetButton");
+    const systemStatus =
+        document.getElementById("systemStatus");
+
+    const stateDot =
+        document.getElementById("stateDot");
+
+
+    const dimensionCount =
+        document.getElementById("dimensionCount");
+
+    const signatureCount =
+        document.getElementById("signatureCount");
+
+    const activeRealities =
+        document.getElementById("activeRealities");
+
+
+    const stabilityValue =
+        document.getElementById("stabilityValue");
+
+    const stabilityBar =
+        document.getElementById("stabilityBar");
+
+
+    const dangerLevel =
+        document.getElementById("dangerLevel");
+
+
+    const telemetryX =
+        document.getElementById("telemetryX");
+
+    const telemetryY =
+        document.getElementById("telemetryY");
+
+    const telemetryZ =
+        document.getElementById("telemetryZ");
+
+
+    const terminal =
+        document.getElementById("terminal");
+
+
+    const eventMessage =
+        document.getElementById("eventMessage");
+
+
+    const simulateButton =
+        document.getElementById("simulateButton");
+
+    const portalButton =
+        document.getElementById("portalButton");
+
+    const overloadButton =
+        document.getElementById("overloadButton");
+
+    const resetButton =
+        document.getElementById("resetButton");
 
     const fullscreenButton =
         document.getElementById("fullscreenButton");
+
 
     const popup =
         document.getElementById("planetPopup");
 
     const popupClose =
         document.getElementById("popupClose");
-
-    const openPlanet =
-        document.getElementById("openPlanet");
 
     const popupName =
         document.getElementById("popupName");
@@ -47,49 +96,37 @@ document.addEventListener("DOMContentLoaded", function () {
     const popupStatus =
         document.getElementById("popupStatus");
 
-    const collapseOverlay =
-        document.getElementById("collapseOverlay");
-
-    const collapsePercent =
-        document.getElementById("collapsePercent");
+    const openPlanet =
+        document.getElementById("openPlanet");
 
 
-    /* =====================================================
-       VERIFICATION
-    ===================================================== */
+    const portalEffect =
+        document.getElementById("portalEffect");
+
+    const realityOverload =
+        document.getElementById("realityOverload");
+
 
     if (!canvas) {
-        console.error("Canvas introuvable");
+
+        console.error(
+            "Canvas multivers introuvable."
+        );
+
         return;
-    }
 
-    if (!simulateButton) {
-        console.error("Bouton simulation introuvable");
-    }
-
-    if (!collapseButton) {
-        console.error("Bouton collapse introuvable");
-    }
-
-    if (!resetButton) {
-        console.error("Bouton reset introuvable");
     }
 
 
     /* =====================================================
-       DONNEES
+       DATABASE
     ===================================================== */
 
-    let planets = [];
+    let planets =
+        Array.isArray(window.multiversePlanets)
+            ? window.multiversePlanets
+            : [];
 
-    if (
-        typeof multiversePlanets !== "undefined" &&
-        Array.isArray(multiversePlanets)
-    ) {
-
-        planets = multiversePlanets;
-
-    }
 
     console.log(
         "Planètes reçues :",
@@ -98,14 +135,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       VARIABLES
+       STATE
     ===================================================== */
 
     let nodes = [];
 
     let particles = [];
 
-    let selectedPlanet = null;
+    let portals = [];
+
+    let selectedNode = null;
 
     let dragging = false;
 
@@ -115,15 +154,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let lastMouseY = 0;
 
-    let stability = 100;
-
-    let collapseTimer = null;
-
     let cameraX = 0;
 
     let cameraY = 0;
 
     let zoom = 1;
+
+    let stability = 100;
+
+    let overloadActive = false;
+
+    let animationFrame = null;
+
+    let eventInterval = null;
+
+    let simulationRunning = false;
+
+
+    /* =====================================================
+       RANDOM
+    ===================================================== */
+
+    function random(min, max) {
+
+        return (
+            Math.random() *
+            (max - min)
+            + min
+        );
+
+    }
 
 
     /* =====================================================
@@ -136,8 +196,30 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        terminal.innerHTML +=
-            "<br>> " + message;
+
+        const line =
+            document.createElement("div");
+
+        line.className =
+            "terminal-line";
+
+        line.textContent =
+            "> " + message;
+
+
+        terminal.appendChild(line);
+
+
+        while (
+            terminal.children.length > 80
+        ) {
+
+            terminal.removeChild(
+                terminal.firstChild
+            );
+
+        }
+
 
         terminal.scrollTop =
             terminal.scrollHeight;
@@ -146,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       CANVAS
+       RESIZE
     ===================================================== */
 
     function resizeCanvas() {
@@ -157,11 +239,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const dpr =
             window.devicePixelRatio || 1;
 
+
         canvas.width =
             rect.width * dpr;
 
         canvas.height =
             rect.height * dpr;
+
 
         ctx.setTransform(
             dpr,
@@ -174,105 +258,144 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+
     window.addEventListener(
         "resize",
         resizeCanvas
     );
 
+
     resizeCanvas();
 
 
     /* =====================================================
-       GENERATION DES PLANETES
+       CREATE NODES
     ===================================================== */
 
     function createNodes() {
 
         nodes = [];
 
-        planets.forEach(function (planet) {
 
-            const angle =
-                Math.random() *
-                Math.PI *
-                2;
+        planets.forEach(
+            function (planet, index) {
 
-            const distance =
-                100 +
-                Math.random() *
-                650;
+                const angle =
+                    random(
+                        0,
+                        Math.PI * 2
+                    );
 
-            nodes.push({
 
-                planet: planet,
+                const distance =
+                    random(
+                        90,
+                        650
+                    );
 
-                x:
-                    Math.cos(angle) *
-                    distance,
 
-                y:
-                    Math.sin(angle) *
-                    distance,
+                nodes.push({
 
-                radius:
-                    3 +
-                    Math.random() * 3,
+                    planet: planet,
 
-                pulse:
-                    Math.random() *
-                    Math.PI *
-                    2,
+                    x:
+                        Math.cos(angle) *
+                        distance,
 
-                active: true
+                    y:
+                        Math.sin(angle) *
+                        distance,
 
-            });
+                    vx:
+                        random(
+                            -0.03,
+                            0.03
+                        ),
 
-        });
+                    vy:
+                        random(
+                            -0.03,
+                            0.03
+                        ),
 
-        if (dimensionCount) {
-            dimensionCount.textContent =
-                nodes.length;
-        }
+                    radius:
+                        random(3, 6),
 
-        if (signatureCount) {
-            signatureCount.textContent =
-                nodes.length;
-        }
+                    pulse:
+                        random(
+                            0,
+                            Math.PI * 2
+                        ),
 
-        if (activeRealities) {
-            activeRealities.textContent =
-                nodes.length;
-        }
+                    phase:
+                        random(
+                            0,
+                            Math.PI * 2
+                        ),
+
+                    active: true,
+
+                    scanned: false,
+
+                    id: index
+
+                });
+
+            }
+        );
+
+
+        updateCounters();
 
     }
 
 
     /* =====================================================
-       PARTICULES
+       PARTICLES
     ===================================================== */
 
     function createParticles() {
 
         particles = [];
 
-        for (let i = 0; i < 600; i++) {
+
+        for (
+            let i = 0;
+            i < 800;
+            i++
+        ) {
 
             particles.push({
 
                 x:
-                    (Math.random() - 0.5) *
-                    3000,
+                    random(
+                        -3000,
+                        3000
+                    ),
 
                 y:
-                    (Math.random() - 0.5) *
-                    2200,
+                    random(
+                        -2200,
+                        2200
+                    ),
 
                 size:
-                    Math.random() * 1.5,
+                    random(
+                        0.3,
+                        1.8
+                    ),
 
                 opacity:
-                    0.2 +
-                    Math.random() * 0.8
+                    random(
+                        0.1,
+                        0.9
+                    ),
+
+                speed:
+                    random(
+                        0.001,
+                        0.01
+                    )
 
             });
 
@@ -282,21 +405,124 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       COORDONNEES
+       PORTALS
     ===================================================== */
 
-    function worldToScreen(node) {
+    function createPortal() {
+
+        portals.push({
+
+            x:
+                random(
+                    -650,
+                    650
+                ),
+
+            y:
+                random(
+                    -400,
+                    400
+                ),
+
+            radius:
+                random(
+                    40,
+                    75
+                ),
+
+            rotation:
+                random(
+                    0,
+                    Math.PI * 2
+                ),
+
+            life:
+                100,
+
+            speed:
+                random(
+                    0.01,
+                    0.04
+                )
+
+        });
+
+
+        if (
+            portals.length > 8
+        ) {
+
+            portals.shift();
+
+        }
+
+
+        terminalLog(
+            "DIMENSIONAL PORTAL DETECTED."
+        );
+
+        setEvent(
+            "PORTAL DETECTED"
+        );
+
+    }
+
+
+    /* =====================================================
+       UPDATE COUNTERS
+    ===================================================== */
+
+    function updateCounters() {
+
+        const active =
+            nodes.filter(
+                node =>
+                    node.active
+            ).length;
+
+
+        if (dimensionCount) {
+
+            dimensionCount.textContent =
+                nodes.length;
+
+        }
+
+
+        if (signatureCount) {
+
+            signatureCount.textContent =
+                nodes.length;
+
+        }
+
+
+        if (activeRealities) {
+
+            activeRealities.textContent =
+                active;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       WORLD TO SCREEN
+    ===================================================== */
+
+    function worldToScreen(x, y) {
 
         return {
 
             x:
                 canvas.clientWidth / 2 +
-                (node.x + cameraX) *
+                (x + cameraX) *
                 zoom,
 
             y:
                 canvas.clientHeight / 2 +
-                (node.y + cameraY) *
+                (y + cameraY) *
                 zoom
 
         };
@@ -305,51 +531,72 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       PARTICULES
+       PARTICLES
     ===================================================== */
 
-    function drawParticles() {
+    function drawParticles(time) {
 
-        particles.forEach(function (particle) {
+        particles.forEach(
+            function (particle) {
 
-            const x =
-                canvas.clientWidth / 2 +
-                (particle.x + cameraX * 0.2) *
-                zoom;
+                particle.x +=
+                    particle.speed;
 
-            const y =
-                canvas.clientHeight / 2 +
-                (particle.y + cameraY * 0.2) *
-                zoom;
+                if (
+                    particle.x > 3200
+                ) {
 
-            if (
-                x < 0 ||
-                x > canvas.clientWidth ||
-                y < 0 ||
-                y > canvas.clientHeight
-            ) {
-                return;
+                    particle.x = -3200;
+
+                }
+
+
+                const pos =
+                    worldToScreen(
+                        particle.x,
+                        particle.y
+                    );
+
+
+                if (
+                    pos.x < 0 ||
+                    pos.x >
+                    canvas.clientWidth ||
+                    pos.y < 0 ||
+                    pos.y >
+                    canvas.clientHeight
+                ) {
+
+                    return;
+
+                }
+
+
+                ctx.globalAlpha =
+                    particle.opacity;
+
+
+                ctx.fillStyle =
+                    "#8affc1";
+
+
+                ctx.beginPath();
+
+
+                ctx.arc(
+                    pos.x,
+                    pos.y,
+                    particle.size,
+                    0,
+                    Math.PI * 2
+                );
+
+
+                ctx.fill();
+
             }
+        );
 
-            ctx.globalAlpha =
-                particle.opacity;
-
-            ctx.fillStyle =
-                "#8affc1";
-
-            ctx.beginPath();
-
-            ctx.arc(
-                x,
-                y,
-                particle.size,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
-
-        });
 
         ctx.globalAlpha = 1;
 
@@ -357,7 +604,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       CONNEXIONS
+       CONNECTIONS
     ===================================================== */
 
     function drawConnections() {
@@ -368,11 +615,14 @@ document.addEventListener("DOMContentLoaded", function () {
             i++
         ) {
 
-            const a = nodes[i];
+            const a =
+                nodes[i];
+
 
             if (!a.active) {
                 continue;
             }
+
 
             for (
                 let j = i + 1;
@@ -380,11 +630,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 j++
             ) {
 
-                const b = nodes[j];
+                const b =
+                    nodes[j];
+
 
                 if (!b.active) {
                     continue;
                 }
+
 
                 const dx =
                     a.x - b.x;
@@ -392,21 +645,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 const dy =
                     a.y - b.y;
 
+
                 const distance =
                     Math.sqrt(
                         dx * dx +
                         dy * dy
                     );
 
-                if (distance > 230) {
+
+                if (
+                    distance > 250
+                ) {
+
                     continue;
+
                 }
 
+
+                const alpha =
+                    0.15 *
+                    (
+                        1 -
+                        distance / 250
+                    );
+
+
                 const posA =
-                    worldToScreen(a);
+                    worldToScreen(
+                        a.x,
+                        a.y
+                    );
+
 
                 const posB =
-                    worldToScreen(b);
+                    worldToScreen(
+                        b.x,
+                        b.y
+                    );
+
 
                 ctx.beginPath();
 
@@ -420,10 +696,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     posB.y
                 );
 
-                ctx.strokeStyle =
-                    "rgba(100,255,170,0.12)";
 
-                ctx.lineWidth = 1;
+                ctx.strokeStyle =
+                    `rgba(100,255,170,${alpha})`;
+
+
+                ctx.lineWidth =
+                    1;
+
 
                 ctx.stroke();
 
@@ -435,56 +715,69 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       CENTRE
+       CENTER CORE
     ===================================================== */
 
-    function drawCenter() {
+    function drawCore(time) {
 
-        const x =
-            canvas.clientWidth / 2;
+        const center =
+            worldToScreen(
+                0,
+                0
+            );
 
-        const y =
-            canvas.clientHeight / 2;
 
         const pulse =
-            35 +
+            32 +
             Math.sin(
-                Date.now() * 0.002
-            ) * 5;
+                time * 0.002
+            ) * 6;
+
 
         const gradient =
             ctx.createRadialGradient(
-                x,
-                y,
+                center.x,
+                center.y,
                 0,
-                x,
-                y,
+                center.x,
+                center.y,
                 pulse
             );
 
-        gradient.addColorStop(
-            0,
-            "rgba(150,255,200,0.8)"
-        );
 
         gradient.addColorStop(
-            0.25,
-            "rgba(100,255,170,0.25)"
+            0,
+            "rgba(220,255,235,0.95)"
         );
+
+
+        gradient.addColorStop(
+            0.15,
+            "rgba(130,255,180,0.6)"
+        );
+
+
+        gradient.addColorStop(
+            0.45,
+            "rgba(80,255,160,0.18)"
+        );
+
 
         gradient.addColorStop(
             1,
-            "rgba(100,255,170,0)"
+            "rgba(80,255,160,0)"
         );
+
 
         ctx.fillStyle =
             gradient;
 
+
         ctx.beginPath();
 
         ctx.arc(
-            x,
-            y,
+            center.x,
+            center.y,
             pulse,
             0,
             Math.PI * 2
@@ -496,12 +789,33 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.strokeStyle =
             "rgba(130,255,190,0.4)";
 
+
+        ctx.lineWidth =
+            1;
+
+
         ctx.beginPath();
 
         ctx.arc(
-            x,
-            y,
-            25,
+            center.x,
+            center.y,
+            23,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            center.x,
+            center.y,
+            31 +
+            Math.sin(
+                time * 0.001
+            ) * 3,
             0,
             Math.PI * 2
         );
@@ -510,153 +824,355 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         ctx.fillStyle =
-            "#baffd5";
+            "#d8ffe8";
+
 
         ctx.font =
             "10px monospace";
 
+
         ctx.textAlign =
             "center";
 
+
         ctx.fillText(
             "C-137",
-            x,
-            y + 4
+            center.x,
+            center.y + 4
         );
 
     }
 
 
     /* =====================================================
-       PLANETES
+       PORTAL DRAW
     ===================================================== */
 
-    function drawNodes() {
+    function drawPortals() {
 
-        nodes.forEach(function (node) {
+        portals.forEach(
+            function (portal) {
 
-            if (!node.active) {
-                return;
-            }
-
-            const pos =
-                worldToScreen(node);
-
-            if (
-                pos.x < -50 ||
-                pos.x >
-                canvas.clientWidth + 50 ||
-                pos.y < -50 ||
-                pos.y >
-                canvas.clientHeight + 50
-            ) {
-                return;
-            }
-
-            node.pulse += 0.04;
-
-            const pulse =
-                Math.sin(
-                    node.pulse
-                ) * 1.5;
+                portal.rotation +=
+                    portal.speed;
 
 
-            /* GLOW */
+                portal.life -=
+                    0.03;
 
-            const glow =
-                ctx.createRadialGradient(
+
+                const pos =
+                    worldToScreen(
+                        portal.x,
+                        portal.y
+                    );
+
+
+                ctx.save();
+
+
+                ctx.translate(
                     pos.x,
-                    pos.y,
-                    0,
-                    pos.x,
-                    pos.y,
-                    25
+                    pos.y
                 );
 
-            glow.addColorStop(
-                0,
-                "rgba(130,255,180,0.5)"
-            );
 
-            glow.addColorStop(
-                1,
-                "rgba(130,255,180,0)"
-            );
-
-            ctx.fillStyle =
-                glow;
-
-            ctx.beginPath();
-
-            ctx.arc(
-                pos.x,
-                pos.y,
-                25,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
+                ctx.rotate(
+                    portal.rotation
+                );
 
 
-            /* PLANETE */
-
-            ctx.fillStyle =
-                "#8affc1";
-
-            ctx.beginPath();
-
-            ctx.arc(
-                pos.x,
-                pos.y,
-                node.radius + pulse,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
+                const radius =
+                    portal.radius *
+                    zoom;
 
 
-            /* CERCLE */
-
-            ctx.strokeStyle =
-                "rgba(150,255,200,0.4)";
-
-            ctx.beginPath();
-
-            ctx.arc(
-                pos.x,
-                pos.y,
-                10 + pulse,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.stroke();
+                const gradient =
+                    ctx.createRadialGradient(
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        radius
+                    );
 
 
-            /* NOM */
+                gradient.addColorStop(
+                    0,
+                    "rgba(220,255,240,0.8)"
+                );
 
-            if (zoom > 0.65) {
+
+                gradient.addColorStop(
+                    0.2,
+                    "rgba(100,255,170,0.35)"
+                );
+
+
+                gradient.addColorStop(
+                    1,
+                    "rgba(100,255,170,0)"
+                );
+
 
                 ctx.fillStyle =
-                    "rgba(170,255,210,0.7)";
+                    gradient;
 
-                ctx.font =
-                    "10px monospace";
 
-                ctx.textAlign =
-                    "left";
+                ctx.beginPath();
 
-                ctx.fillText(
-                    node.planet.nom,
-                    pos.x + 13,
-                    pos.y - 10
+                ctx.arc(
+                    0,
+                    0,
+                    radius,
+                    0,
+                    Math.PI * 2
                 );
 
-            }
+                ctx.fill();
 
-        });
+
+                ctx.strokeStyle =
+                    "rgba(130,255,190,0.65)";
+
+
+                ctx.lineWidth =
+                    2;
+
+
+                ctx.setLineDash(
+                    [8, 5]
+                );
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    0,
+                    0,
+                    radius * 0.65,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.stroke();
+
+
+                ctx.rotate(
+                    -portal.rotation * 2
+                );
+
+
+                ctx.setLineDash(
+                    [3, 10]
+                );
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    0,
+                    0,
+                    radius * 0.8,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.stroke();
+
+
+                ctx.restore();
+
+            }
+        );
+
+
+        portals =
+            portals.filter(
+                portal =>
+                    portal.life > 0
+            );
+
+    }
+
+
+    /* =====================================================
+       NODES
+    ===================================================== */
+
+    function drawNodes(time) {
+
+        nodes.forEach(
+            function (node) {
+
+                if (!node.active) {
+                    return;
+                }
+
+
+                node.pulse +=
+                    0.04;
+
+
+                const pos =
+                    worldToScreen(
+                        node.x,
+                        node.y
+                    );
+
+
+                if (
+                    pos.x < -80 ||
+                    pos.x >
+                    canvas.clientWidth + 80 ||
+                    pos.y < -80 ||
+                    pos.y >
+                    canvas.clientHeight + 80
+                ) {
+
+                    return;
+
+                }
+
+
+                const pulse =
+                    Math.sin(
+                        node.pulse
+                    ) * 1.5;
+
+
+                const radius =
+                    (
+                        node.radius +
+                        pulse
+                    ) *
+                    Math.max(
+                        0.7,
+                        zoom
+                    );
+
+
+                /* GLOW */
+
+                const glow =
+                    ctx.createRadialGradient(
+                        pos.x,
+                        pos.y,
+                        0,
+                        pos.x,
+                        pos.y,
+                        35 * zoom
+                    );
+
+
+                glow.addColorStop(
+                    0,
+                    "rgba(130,255,180,0.45)"
+                );
+
+
+                glow.addColorStop(
+                    1,
+                    "rgba(130,255,180,0)"
+                );
+
+
+                ctx.fillStyle =
+                    glow;
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    pos.x,
+                    pos.y,
+                    35 * zoom,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fill();
+
+
+                /* ORBIT */
+
+                ctx.strokeStyle =
+                    node.scanned
+                        ? "rgba(230,255,240,0.8)"
+                        : "rgba(130,255,190,0.3)";
+
+
+                ctx.lineWidth =
+                    node.scanned
+                        ? 2
+                        : 1;
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    pos.x,
+                    pos.y,
+                    10 * zoom,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.stroke();
+
+
+                /* CORE */
+
+                ctx.fillStyle =
+                    node.scanned
+                        ? "#ffffff"
+                        : "#8affc1";
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    pos.x,
+                    pos.y,
+                    radius,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fill();
+
+
+                /* NAME */
+
+                if (
+                    zoom > 0.55
+                ) {
+
+                    ctx.fillStyle =
+                        node.scanned
+                            ? "#ffffff"
+                            : "rgba(180,255,210,0.75)";
+
+
+                    ctx.font =
+                        "10px monospace";
+
+
+                    ctx.textAlign =
+                        "left";
+
+
+                    ctx.fillText(
+                        node.planet.nom,
+                        pos.x + 14,
+                        pos.y - 10
+                    );
+
+                }
+
+            }
+        );
 
     }
 
@@ -665,7 +1181,7 @@ document.addEventListener("DOMContentLoaded", function () {
        ANIMATION
     ===================================================== */
 
-    function animate() {
+    function animate(time) {
 
         ctx.clearRect(
             0,
@@ -674,70 +1190,78 @@ document.addEventListener("DOMContentLoaded", function () {
             canvas.clientHeight
         );
 
-        drawParticles();
+
+        drawParticles(time);
 
         drawConnections();
 
-        drawCenter();
+        drawPortals();
 
-        drawNodes();
+        drawCore(time);
+
+        drawNodes(time);
+
+
+        /* TELEMETRY */
 
         if (telemetryX) {
+
             telemetryX.textContent =
                 Math.floor(cameraX);
+
         }
+
 
         if (telemetryY) {
+
             telemetryY.textContent =
                 Math.floor(cameraY);
+
         }
+
 
         if (telemetryZ) {
+
             telemetryZ.textContent =
-                Math.floor(zoom * 100);
+                Math.floor(
+                    zoom * 100
+                );
+
         }
 
-        requestAnimationFrame(
-            animate
-        );
+
+        animationFrame =
+            requestAnimationFrame(
+                animate
+            );
 
     }
 
 
     /* =====================================================
-       CLIC
+       FIND NODE
     ===================================================== */
 
-    canvas.addEventListener(
-        "click",
-        function (event) {
+    function findNode(mouseX, mouseY) {
 
-            if (movedMouse) {
-                movedMouse = false;
-                return;
-            }
+        let found =
+            null;
 
-            const rect =
-                canvas.getBoundingClientRect();
 
-            const mouseX =
-                event.clientX -
-                rect.left;
-
-            const mouseY =
-                event.clientY -
-                rect.top;
-
-            let found = null;
-
-            nodes.forEach(function (node) {
+        nodes.forEach(
+            function (node) {
 
                 if (!node.active) {
                     return;
                 }
 
+
                 const pos =
-                    worldToScreen(node);
+                    worldToScreen(
+                        node.x,
+                        node.y
+                    );
+
 
                 const distance =
                     Math.hypot(
@@ -745,60 +1269,131 @@ document.addEventListener("DOMContentLoaded", function () {
                         mouseY - pos.y
                     );
 
-                if (distance < 18) {
-                    found = node;
+
+                if (
+                    distance <
+                    Math.max(
+                        18,
+                        25 * zoom
+                    )
+                ) {
+
+                    found =
+                        node;
+
                 }
 
-            });
-
-            if (!found) {
-                return;
             }
+        );
 
-            selectedPlanet =
-                found;
 
-            popupName.textContent =
-                found.planet.nom;
+        return found;
 
-            popupDimension.textContent =
-                found.planet.dimension;
-
-            popupCoordinates.textContent =
-                Math.round(found.x) +
-                " / " +
-                Math.round(found.y);
-
-            popupStatus.textContent =
-                "STABLE";
-
-            popup.classList.add(
-                "active"
-            );
-
-            terminalLog(
-                "Signature sélectionnée : " +
-                found.planet.nom
-            );
-
-        }
-    );
+    }
 
 
     /* =====================================================
-       DRAG
+       SELECT NODE
+    ===================================================== */
+
+    function selectNode(node) {
+
+        if (!node) {
+            return;
+        }
+
+
+        selectedNode =
+            node;
+
+
+        node.scanned =
+            true;
+
+
+        popupName.textContent =
+            node.planet.nom;
+
+
+        popupDimension.textContent =
+            node.planet.dimension;
+
+
+        popupCoordinates.textContent =
+            Math.round(node.x) +
+            " / " +
+            Math.round(node.y);
+
+
+        popupStatus.textContent =
+            "SCANNING";
+
+
+        popup.classList.add(
+            "active"
+        );
+
+
+        terminalLog(
+            "PLANETARY SIGNATURE: " +
+            node.planet.nom
+        );
+
+
+        terminalLog(
+            "DIMENSION: " +
+            node.planet.dimension
+        );
+
+
+        terminalLog(
+            "QUANTUM SCAN INITIATED."
+        );
+
+
+        setTimeout(
+            function () {
+
+                if (
+                    selectedNode === node
+                ) {
+
+                    popupStatus.textContent =
+                        "STABLE";
+
+
+                    terminalLog(
+                        "SCAN COMPLETE."
+                    );
+
+                }
+
+            },
+            1200
+        );
+
+    }
+
+
+    /* =====================================================
+       MOUSE
     ===================================================== */
 
     canvas.addEventListener(
         "mousedown",
         function (event) {
 
-            dragging = true;
+            dragging =
+                true;
 
-            movedMouse = false;
+
+            movedMouse =
+                false;
+
 
             lastMouseX =
                 event.clientX;
+
 
             lastMouseY =
                 event.clientY;
@@ -815,31 +1410,39 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+
             const dx =
                 event.clientX -
                 lastMouseX;
 
+
             const dy =
                 event.clientY -
                 lastMouseY;
+
 
             if (
                 Math.abs(dx) > 2 ||
                 Math.abs(dy) > 2
             ) {
 
-                movedMouse = true;
+                movedMouse =
+                    true;
 
             }
+
 
             cameraX +=
                 dx / zoom;
 
+
             cameraY +=
                 dy / zoom;
 
+
             lastMouseX =
                 event.clientX;
+
 
             lastMouseY =
                 event.clientY;
@@ -852,7 +1455,55 @@ document.addEventListener("DOMContentLoaded", function () {
         "mouseup",
         function () {
 
-            dragging = false;
+            dragging =
+                false;
+
+        }
+    );
+
+
+    canvas.addEventListener(
+        "click",
+        function (event) {
+
+            if (movedMouse) {
+
+                movedMouse =
+                    false;
+
+                return;
+
+            }
+
+
+            const rect =
+                canvas.getBoundingClientRect();
+
+
+            const mouseX =
+                event.clientX -
+                rect.left;
+
+
+            const mouseY =
+                event.clientY -
+                rect.top;
+
+
+            const node =
+                findNode(
+                    mouseX,
+                    mouseY
+                );
+
+
+            if (node) {
+
+                selectNode(
+                    node
+                );
+
+            }
 
         }
     );
@@ -868,7 +1519,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             event.preventDefault();
 
-            if (event.deltaY < 0) {
+
+            const oldZoom =
+                zoom;
+
+
+            if (
+                event.deltaY < 0
+            ) {
 
                 zoom *= 1.12;
 
@@ -878,14 +1536,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+
             zoom =
                 Math.max(
-                    0.3,
+                    0.25,
                     Math.min(
                         zoom,
-                        4
+                        5
                     )
                 );
+
+
+            /* keep zoom smooth */
+
+            if (
+                oldZoom !== zoom
+            ) {
+
+                terminalLog(
+                    "OPTICAL ZOOM: " +
+                    Math.round(
+                        zoom * 100
+                    ) +
+                    "%"
+                );
+
+            }
 
         },
         {
@@ -895,160 +1571,365 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       SIMULATION
+       EVENT
     ===================================================== */
 
-    simulateButton.addEventListener(
-        "click",
-        function () {
+    const randomEvents = [
 
-            console.log(
-                "SIMULATION CLICK"
-            );
+        "QUANTUM FLUCTUATION DETECTED",
 
-            systemStatus.textContent =
-                "SIMULATION";
+        "UNKNOWN LIFEFORM SIGNAL",
 
-            terminalLog(
-                "MULTIVERSE SIMULATION STARTED."
-            );
+        "DIMENSIONAL STATIC DETECTED",
 
-            setTimeout(function () {
+        "TEMPORAL ANOMALY DETECTED",
 
-                terminalLog(
-                    "Quantum fluctuations detected."
-                );
+        "PORTAL SIGNATURE DETECTED",
 
-            }, 700);
+        "REALITY WAVE DETECTED",
 
-            setTimeout(function () {
+        "UNKNOWN TRANSMISSION",
 
-                terminalLog(
-                    "Reality connections recalculated."
-                );
+        "MULTIVERSE FREQUENCY SHIFT",
 
-            }, 1400);
+        "GRAVITATIONAL ANOMALY",
 
-            setTimeout(function () {
+        "RICK SIGNATURE DETECTED"
 
-                terminalLog(
-                    "New dimensional signatures detected."
-                );
+    ];
 
-                systemStatus.textContent =
-                    "STABLE";
 
-            }, 2100);
+    function setEvent(message) {
+
+        if (!eventMessage) {
+            return;
+        }
+
+
+        eventMessage.textContent =
+            message;
+
+
+        eventMessage.animate(
+            [
+                {
+                    opacity: 0
+                },
+                {
+                    opacity: 1
+                }
+            ],
+            {
+                duration: 300
+            }
+        );
+
+    }
+
+
+    function randomEvent() {
+
+        const event =
+            randomEvents[
+                Math.floor(
+                    Math.random() *
+                    randomEvents.length
+                )
+            ];
+
+
+        setEvent(
+            event
+        );
+
+
+        terminalLog(
+            event
+        );
+
+
+        if (
+            Math.random() >
+            0.7
+        ) {
+
+            createPortal();
 
         }
-    );
+
+    }
 
 
     /* =====================================================
-       COLLAPSE
+       SIMULATION
     ===================================================== */
 
-    collapseButton.addEventListener(
-        "click",
-        function () {
+    function runSimulation() {
 
-            console.log(
-                "COLLAPSE CLICK"
-            );
-
-            if (collapseTimer) {
-                return;
-            }
-
-            collapseRunning();
-
+        if (simulationRunning) {
+            return;
         }
-    );
 
 
-    function collapseRunning() {
+        simulationRunning =
+            true;
 
-        stability = 100;
 
-        collapseOverlay.classList.add(
+        systemStatus.textContent =
+            "SIMULATION ACTIVE";
+
+
+        terminalLog(
+            "MULTIVERSE SIMULATION STARTED."
+        );
+
+
+        terminalLog(
+            "CALCULATING REALITY NETWORK..."
+        );
+
+
+        setTimeout(
+            function () {
+
+                terminalLog(
+                    "QUANTUM FLUCTUATIONS DETECTED."
+                );
+
+                createPortal();
+
+            },
+            600
+        );
+
+
+        setTimeout(
+            function () {
+
+                terminalLog(
+                    "DIMENSIONAL LINKS RECALCULATED."
+                );
+
+            },
+            1200
+        );
+
+
+        setTimeout(
+            function () {
+
+                terminalLog(
+                    "TEMPORAL STABILITY: 99.7%"
+                );
+
+            },
+            1800
+        );
+
+
+        setTimeout(
+            function () {
+
+                terminalLog(
+                    "SIMULATION COMPLETE."
+                );
+
+
+                systemStatus.textContent =
+                    "SYSTEM STABLE";
+
+
+                simulationRunning =
+                    false;
+
+            },
+            2400
+        );
+
+    }
+
+
+    /* =====================================================
+       PORTAL BUTTON
+    ===================================================== */
+
+    function openPortal() {
+
+        portalEffect.classList.add(
             "active"
         );
+
+
+        createPortal();
+
+
+        terminalLog(
+            "MANUAL PORTAL GENERATION."
+        );
+
+
+        setEvent(
+            "MANUAL PORTAL OPENED"
+        );
+
+
+        setTimeout(
+            function () {
+
+                portalEffect.classList.remove(
+                    "active"
+                );
+
+            },
+            2500
+        );
+
+    }
+
+
+    /* =====================================================
+       REALITY OVERLOAD
+    ===================================================== */
+
+    function startOverload() {
+
+        if (overloadActive) {
+            return;
+        }
+
+
+        overloadActive =
+            true;
+
+
+        realityOverload.classList.add(
+            "active"
+        );
+
 
         systemStatus.textContent =
             "CRITICAL";
 
+
+        stateDot.style.background =
+            "#ff5555";
+
+
+        stateDot.style.boxShadow =
+            "0 0 15px #ff5555";
+
+
         terminalLog(
-            "⚠ MULTIVERSE COLLAPSE INITIATED."
+            "!!! REALITY OVERLOAD INITIATED !!!"
         );
 
-        collapseTimer =
-            setInterval(function () {
 
-                stability -=
-                    Math.random() * 5 + 1;
-
-                stability =
-                    Math.max(
-                        4,
-                        stability
-                    );
+        let value =
+            100;
 
 
-                stabilityValue.textContent =
-                    Math.floor(stability) +
-                    "%";
+        const overloadTimer =
+            setInterval(
+                function () {
 
-                stabilityBar.style.width =
-                    stability +
-                    "%";
-
-                collapsePercent.textContent =
-                    Math.floor(stability) +
-                    "%";
+                    value -=
+                        random(
+                            2,
+                            7
+                        );
 
 
-                const active =
-                    Math.ceil(
-                        nodes.length *
-                        stability /
-                        100
-                    );
-
-                activeRealities.textContent =
-                    active;
+                    value =
+                        Math.max(
+                            0,
+                            value
+                        );
 
 
-                nodes.forEach(function (node) {
+                    stability =
+                        value;
+
+
+                    stabilityValue.textContent =
+                        Math.floor(
+                            value
+                        ) +
+                        "%";
+
+
+                    stabilityBar.style.width =
+                        value +
+                        "%";
+
 
                     if (
-                        Math.random() >
-                        stability / 100
+                        value <
+                        75
                     ) {
 
-                        node.active =
-                            false;
+                        createPortal();
 
                     }
 
-                });
+
+                    if (
+                        value <=
+                        0
+                    ) {
+
+                        clearInterval(
+                            overloadTimer
+                        );
 
 
-                if (stability <= 4) {
+                        terminalLog(
+                            "!!! REALITY COLLAPSE COMPLETE !!!"
+                        );
 
-                    clearInterval(
-                        collapseTimer
-                    );
 
-                    collapseTimer =
-                        null;
+                        nodes.forEach(
+                            function (node) {
 
-                    terminalLog(
-                        "!!! MULTIVERSE CRITICAL !!!"
-                    );
+                                if (
+                                    Math.random() >
+                                    0.35
+                                ) {
 
-                }
+                                    node.active =
+                                        false;
 
-            }, 180);
+                                }
+
+                            }
+                        );
+
+
+                        updateCounters();
+
+
+                        setTimeout(
+                            function () {
+
+                                realityOverload.classList.remove(
+                                    "active"
+                                );
+
+                                overloadActive =
+                                    false;
+
+
+                                systemStatus.textContent =
+                                    "SYSTEM CRITICAL";
+
+                            },
+                            1200
+                        );
+
+                    }
+
+                },
+                180
+            );
 
     }
 
@@ -1057,49 +1938,139 @@ document.addEventListener("DOMContentLoaded", function () {
        RESET
     ===================================================== */
 
-    resetButton.addEventListener(
-        "click",
-        function () {
+    function resetSystem() {
 
-            console.log(
-                "RESET CLICK"
-            );
+        terminalLog(
+            "RESETTING MULTIVERSE..."
+        );
 
-            if (collapseTimer) {
 
-                clearInterval(
-                    collapseTimer
-                );
+        if (overloadActive) {
 
-                collapseTimer =
-                    null;
-
-            }
-
-            collapseOverlay.classList.remove(
+            realityOverload.classList.remove(
                 "active"
             );
 
-            stability = 100;
+            overloadActive =
+                false;
 
-            stabilityValue.textContent =
-                "100%";
+        }
 
-            stabilityBar.style.width =
-                "100%";
 
-            systemStatus.textContent =
-                "STABLE";
+        portals =
+            [];
 
-            cameraX = 0;
-            cameraY = 0;
-            zoom = 1;
 
-            createNodes();
+        cameraX =
+            0;
 
-            terminalLog(
-                "MULTIVERSE RESET."
-            );
+        cameraY =
+            0;
+
+        zoom =
+            1;
+
+
+        stability =
+            100;
+
+
+        stabilityValue.textContent =
+            "100%";
+
+
+        stabilityBar.style.width =
+            "100%";
+
+
+        systemStatus.textContent =
+            "SYSTEM STABLE";
+
+
+        stateDot.style.background =
+            "#8affc1";
+
+
+        stateDot.style.boxShadow =
+            "0 0 12px #8affc1";
+
+
+        createNodes();
+
+
+        terminalLog(
+            "QUANTUM CORE REINITIALIZED."
+        );
+
+
+        terminalLog(
+            "MULTIVERSE RESET COMPLETE."
+        );
+
+
+        setEvent(
+            "SYSTEM RESET"
+        );
+
+    }
+
+
+    /* =====================================================
+       FULLSCREEN
+    ===================================================== */
+
+    fullscreenButton.addEventListener(
+        "click",
+        async function () {
+
+            try {
+
+                if (
+                    !document.fullscreenElement
+                ) {
+
+                    await document.documentElement
+                        .requestFullscreen();
+
+
+                    fullscreenButton.textContent =
+                        "✕ EXIT FULLSCREEN";
+
+                } else {
+
+                    await document.exitFullscreen();
+
+
+                    fullscreenButton.textContent =
+                        "⛶ FULLSCREEN";
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Fullscreen error:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "fullscreenchange",
+        function () {
+
+            if (
+                !document.fullscreenElement
+            ) {
+
+                fullscreenButton.textContent =
+                    "⛶ FULLSCREEN";
+
+            }
 
         }
     );
@@ -1125,14 +2096,19 @@ document.addEventListener("DOMContentLoaded", function () {
         "click",
         function () {
 
-            if (!selectedPlanet) {
+            if (
+                !selectedNode
+            ) {
+
                 return;
+
             }
+
 
             window.location.href =
                 "planete.php?nom=" +
                 encodeURIComponent(
-                    selectedPlanet.planet.nom
+                    selectedNode.planet.nom
                 );
 
         }
@@ -1140,37 +2116,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       FULLSCREEN
+       ESCAPE
     ===================================================== */
 
-    fullscreenButton.addEventListener(
-        "click",
-        async function () {
+    document.addEventListener(
+        "keydown",
+        function (event) {
 
-            try {
+            if (
+                event.key === "Escape"
+            ) {
 
-                if (!document.fullscreenElement) {
-
-                    await document.documentElement
-                        .requestFullscreen();
-
-                    fullscreenButton.textContent =
-                        "✕ EXIT FULLSCREEN";
-
-                } else {
-
-                    await document.exitFullscreen();
-
-                    fullscreenButton.textContent =
-                        "⛶ FULLSCREEN";
-
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "Fullscreen error:",
-                    error
+                popup.classList.remove(
+                    "active"
                 );
 
             }
@@ -1180,26 +2138,94 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       INITIALISATION
+       START RANDOM EVENTS
+    ===================================================== */
+
+    eventInterval =
+        setInterval(
+            function () {
+
+                if (
+                    !overloadActive
+                ) {
+
+                    randomEvent();
+
+                }
+
+            },
+            7000
+        );
+
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    simulateButton.addEventListener(
+        "click",
+        runSimulation
+    );
+
+
+    portalButton.addEventListener(
+        "click",
+        openPortal
+    );
+
+
+    overloadButton.addEventListener(
+        "click",
+        startOverload
+    );
+
+
+    resetButton.addEventListener(
+        "click",
+        resetSystem
+    );
+
+
+    /* =====================================================
+       INITIALIZATION
     ===================================================== */
 
     createNodes();
 
     createParticles();
 
+
     terminalLog(
         planets.length +
-        " planetary signature(s) loaded."
+        " PLANETARY SIGNATURE(S) LOADED."
     );
 
-    terminalLog(
-        "Multiverse visualization online."
-    );
 
     terminalLog(
-        "Awaiting command..."
+        "QUANTUM CORE ONLINE."
     );
+
+
+    terminalLog(
+        "DIMENSIONAL OBSERVATORY ONLINE."
+    );
+
+
+    terminalLog(
+        "SYSTEM READY."
+    );
+
+
+    setEvent(
+        "NO ANOMALY DETECTED"
+    );
+
 
     animate();
+
+
+    console.log(
+        "MULTIVERSE SYSTEM ONLINE."
+    );
 
 });
