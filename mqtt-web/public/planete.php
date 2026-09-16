@@ -37,6 +37,7 @@ if (!$planete) {
     <link rel="stylesheet" href="recherche.css">
 
 </head>
+<script src="script.js"></script>
 
 <body style="overflow: hidden;">
 
@@ -127,6 +128,126 @@ if (!$planete) {
             </div>
 
         </section>
+
+        <section class="planet-scanner">
+
+            <div class="scanner-header">
+                <span class="scanner-status-dot"></span>
+                <span>RICK'S INTERDIMENSIONAL SCANNER</span>
+                <span class="scanner-version">v1.0</span>
+            </div>
+
+            <div class="scanner-content">
+
+                <!-- PLANÈTE -->
+                <div class="planet-display">
+
+                    <div class="scanner-ring ring-1"></div>
+                    <div class="scanner-ring ring-2"></div>
+                    <div class="scanner-ring ring-3"></div>
+
+                    <div class="scan-line"></div>
+
+                    <div class="planet">
+                        <div class="planet-light"></div>
+                    </div>
+
+                    <div class="coordinates">
+                        X: <span id="coordX">---</span><br>
+                        Y: <span id="coordY">---</span><br>
+                        Z: <span id="coordZ">---</span>
+                    </div>
+
+                </div>
+
+
+                <!-- INFORMATIONS -->
+                <div class="scanner-info">
+
+                    <h2>SCAN DE PLANÈTE</h2>
+
+                    <div class="target-name">
+                        CIBLE :
+                        <strong id="planetName">INCONNUE</strong>
+                    </div>
+
+
+                    <!-- TERMINAL -->
+                    <div class="scanner-terminal">
+
+                        <div id="scanText">
+                            > Scanner prêt.<br>
+                            > En attente d'une cible...
+                        </div>
+
+                    </div>
+
+
+                    <!-- PROGRESSION -->
+                    <div class="scan-progress-container">
+
+                        <div class="scan-progress-bar">
+                            <div
+                                class="scan-progress"
+                                id="scanProgress">
+                            </div>
+                        </div>
+
+                        <span id="scanPercent">0%</span>
+
+                    </div>
+
+
+                    <!-- BOUTON -->
+                    <button
+                        class="scan-button"
+                        id="scanButton"
+                        onclick="startPlanetScan()">
+
+                        ⚡ LANCER LE SCAN
+
+                    </button>
+
+
+                    <!-- RÉSULTATS -->
+                    <div
+                        class="scan-results"
+                        id="scanResults">
+
+                        <div class="result">
+                            <span>ATMOSPHÈRE</span>
+                            <strong id="atmosphere">---</strong>
+                        </div>
+
+                        <div class="result">
+                            <span>POPULATION</span>
+                            <strong id="population">---</strong>
+                        </div>
+
+                        <div class="result">
+                            <span>FORMES DE VIE</span>
+                            <strong id="lifeforms">---</strong>
+                        </div>
+
+                        <div class="result">
+                            <span>STABILITÉ</span>
+                            <strong id="stability">---</strong>
+                        </div>
+
+                        <div class="result danger-result">
+                            <span>DANGER</span>
+                            <strong id="danger">---</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
 
     </main>
 <script>
