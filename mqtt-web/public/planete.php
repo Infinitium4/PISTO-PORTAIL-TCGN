@@ -34,7 +34,7 @@ if (!$planete) {
 
     <title><?= htmlspecialchars($planete['nom']) ?></title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="recherche.css">
 
 </head>
 
