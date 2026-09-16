@@ -39,14 +39,14 @@ else {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Recherche</title>
+    <title>Wiki Rik & Morty</title>
     <link rel="stylesheet" href="recherche.css">
 
 </head>
 
 <body>
 
-    <h1>Wiki Morty</h1>
+    <h1>Wiki Rik & Morty</h1>
 
     <form method="GET">
 
