@@ -74,20 +74,19 @@ if (!$planete) {
                 >
 
                 <div class="dangerometre">
-
                     <h2>☠️ Dangeromètre</h2>
 
                     <div class="danger-bar">
                         <div
                             class="danger-progress"
-                            style="width: <?= ($planete['danger'] / 5) * 100 ?>%;"
+                            id="dangerProgress"
+                            data-danger="<?= htmlspecialchars($planete['danger']) ?>"
                         ></div>
                     </div>
 
                     <p>
-                        Niveau <?= htmlspecialchars($planete['danger']) ?> / 5
+                        Niveau <span id="dangerLevel">0</span> / 5
                     </p>
-
                 </div>
             </div>
 
@@ -132,7 +131,35 @@ if (!$planete) {
         </section>
 
     </main>
+<script>
+const progress = document.getElementById("dangerProgress");
+const dangerLevel = document.getElementById("dangerLevel");
 
+const danger = Number(progress.dataset.danger);
+
+let niveau = 0;
+
+setTimeout(() => {
+
+    const animation = setInterval(() => {
+
+        niveau += 0.05;
+
+        if (niveau >= danger) {
+            niveau = danger;
+            clearInterval(animation);
+        }
+
+        const pourcentage = (niveau / 5) * 100;
+
+        progress.style.width = pourcentage + "%";
+
+        dangerLevel.textContent = Math.ceil(niveau);
+
+    }, 30);
+
+}, 500);
+</script>
 </body>
 
 </html>
