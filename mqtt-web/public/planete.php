@@ -50,7 +50,7 @@ if (!$planete) {
             console.error("Received data:", data);
             console.error("Received message:", message.action);
 
-            if (message.action === "retour"){
+            if (message.action === "wiki-retour"){
                 window.location.href = "/mqtt-web/public/";
             }
         };
