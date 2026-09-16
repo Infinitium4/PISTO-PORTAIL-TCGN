@@ -1,4 +1,3 @@
-```php
 <?php
 
 require_once 'logBDD.php';
@@ -54,6 +53,10 @@ if (!$planete) {
         <section class="wiki-info">
 
             <h2>Informations générales</h2>
+
+            <a> 
+                <img src="<?= htmlspecialchars($planete['image']) ?>" alt="Image de <?= htmlspecialchars($planete['nom']) ?>">
+            </a>
 
             <p>
                 Température :
