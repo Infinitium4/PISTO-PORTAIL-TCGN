@@ -45,7 +45,7 @@ if (!$planete) {
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            const message = JSON.parse(event.data);
+            const message = JSON.parse(data.message);
 
             console.error("Received data:", data);
             console.error("Received message:", message.action);
