@@ -46,7 +46,7 @@ else {
 
 <body>
 
-    <h1>Recherches</h1>
+    <h1>Wiki Morty</h1>
 
     <form method="GET">
 
