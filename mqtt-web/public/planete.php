@@ -127,6 +127,7 @@ if (!$planete) {
             </div>
 
         </section>
+        
 
     </main>
 <script>
@@ -158,8 +159,6 @@ setTimeout(() => {
 
 }, 500);
 </script>
-
-
 </body>
 
 </html>
