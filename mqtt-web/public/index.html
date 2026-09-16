@@ -18,14 +18,21 @@
 
             console.error("Received message:", data);
 
-            const nomVideo = data.message.trim() + ".mp4";
+            if (data.action === "portail") {
 
-            video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
-            video.load();
-            video.play().catch(error => {
-                video.src = "/mqtt-web/public/media/error.mp4";
+                const nomVideo = data.message.trim() + ".mp4";
+
+                video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
                 video.load();
-            });
+                video.play().catch(error => {
+                    video.src = "/mqtt-web/public/media/error.mp4";
+                    video.load();
+                });
+            }
+
+            if (data.action === "wiki"){
+                window.location.href = "/planete.php?nom=" + encodeURIComponent(data.message.dimension);
+            }
         };
 
     </script>
