@@ -1,43 +1,40 @@
-document.addEventListener("DOMContentLoaded", () => {
+```javascript
+document.addEventListener("DOMContentLoaded", function () {
 
-    const canvas =
-        document.getElementById("multiverseCanvas");
+    console.log("MULTIVERSE JS chargé");
 
-    const ctx =
-        canvas.getContext("2d");
+    const canvas = document.getElementById("multiverseCanvas");
+    const ctx = canvas.getContext("2d");
 
-    const terminal =
-        document.getElementById("terminal");
+    const terminal = document.getElementById("terminal");
 
-    const dimensionCount =
-        document.getElementById("dimensionCount");
+    const dimensionCount = document.getElementById("dimensionCount");
+    const signatureCount = document.getElementById("signatureCount");
+    const activeRealities = document.getElementById("activeRealities");
 
-    const signatureCount =
-        document.getElementById("signatureCount");
+    const systemStatus = document.getElementById("systemStatus");
+    const stabilityValue = document.getElementById("stabilityValue");
+    const stabilityBar = document.getElementById("stabilityBar");
 
-    const activeRealities =
-        document.getElementById("activeRealities");
+    const telemetryX = document.getElementById("telemetryX");
+    const telemetryY = document.getElementById("telemetryY");
+    const telemetryZ = document.getElementById("telemetryZ");
 
-    const systemStatus =
-        document.getElementById("systemStatus");
+    const simulateButton = document.getElementById("simulateButton");
+    const collapseButton = document.getElementById("collapseButton");
+    const resetButton = document.getElementById("resetButton");
 
-    const stabilityValue =
-        document.getElementById("stabilityValue");
-
-    const stabilityBar =
-        document.getElementById("stabilityBar");
-
-    const telemetryX =
-        document.getElementById("telemetryX");
-
-    const telemetryY =
-        document.getElementById("telemetryY");
-
-    const telemetryZ =
-        document.getElementById("telemetryZ");
+    const fullscreenButton =
+        document.getElementById("fullscreenButton");
 
     const popup =
         document.getElementById("planetPopup");
+
+    const popupClose =
+        document.getElementById("popupClose");
+
+    const openPlanet =
+        document.getElementById("openPlanet");
 
     const popupName =
         document.getElementById("popupName");
@@ -51,65 +48,102 @@ document.addEventListener("DOMContentLoaded", () => {
     const popupStatus =
         document.getElementById("popupStatus");
 
-    const openPlanet =
-        document.getElementById("openPlanet");
-
-    const popupClose =
-        document.getElementById("popupClose");
-
-    const simulateButton =
-        document.getElementById("simulateButton");
-
-    const collapseButton =
-        document.getElementById("collapseButton");
-
-    const resetButton =
-        document.getElementById("resetButton");
-
     const collapseOverlay =
         document.getElementById("collapseOverlay");
 
     const collapsePercent =
         document.getElementById("collapsePercent");
 
-    const fullscreenButton =
-        document.getElementById("fullscreenButton");
+
+    /* =====================================================
+       VERIFICATION
+    ===================================================== */
+
+    if (!canvas) {
+        console.error("Canvas introuvable");
+        return;
+    }
+
+    if (!simulateButton) {
+        console.error("Bouton simulation introuvable");
+    }
+
+    if (!collapseButton) {
+        console.error("Bouton collapse introuvable");
+    }
+
+    if (!resetButton) {
+        console.error("Bouton reset introuvable");
+    }
 
 
     /* =====================================================
        DONNEES
     ===================================================== */
 
-    const planets =
-        Array.isArray(multiversePlanets)
-            ? multiversePlanets
-            : [];
+    let planets = [];
 
+    if (
+        typeof multiversePlanets !== "undefined" &&
+        Array.isArray(multiversePlanets)
+    ) {
+
+        planets = multiversePlanets;
+
+    }
+
+    console.log(
+        "Planètes reçues :",
+        planets
+    );
+
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
 
     let nodes = [];
 
     let particles = [];
 
-    let camera = {
-        x: 0,
-        y: 0,
-        zoom: 1
-    };
-
     let selectedPlanet = null;
 
     let dragging = false;
 
-    let lastMouse = {
-        x: 0,
-        y: 0
-    };
+    let movedMouse = false;
 
-    let simulationRunning = false;
+    let lastMouseX = 0;
 
-    let collapseRunning = false;
+    let lastMouseY = 0;
 
     let stability = 100;
+
+    let collapseTimer = null;
+
+    let cameraX = 0;
+
+    let cameraY = 0;
+
+    let zoom = 1;
+
+
+    /* =====================================================
+       TERMINAL
+    ===================================================== */
+
+    function terminalLog(message) {
+
+        if (!terminal) {
+            return;
+        }
+
+        terminal.innerHTML +=
+            "<br>> " + message;
+
+        terminal.scrollTop =
+            terminal.scrollHeight;
+
+    }
 
 
     /* =====================================================
@@ -121,17 +155,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const rect =
             canvas.getBoundingClientRect();
 
+        const dpr =
+            window.devicePixelRatio || 1;
+
         canvas.width =
-            rect.width * window.devicePixelRatio;
+            rect.width * dpr;
 
         canvas.height =
-            rect.height * window.devicePixelRatio;
+            rect.height * dpr;
 
         ctx.setTransform(
-            window.devicePixelRatio,
+            dpr,
             0,
             0,
-            window.devicePixelRatio,
+            dpr,
             0,
             0
         );
@@ -154,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         nodes = [];
 
-        planets.forEach((planet, index) => {
+        planets.forEach(function (planet) {
 
             const angle =
                 Math.random() *
@@ -162,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 2;
 
             const distance =
-                80 +
+                100 +
                 Math.random() *
                 650;
 
@@ -187,24 +224,26 @@ document.addEventListener("DOMContentLoaded", () => {
                     Math.PI *
                     2,
 
-                speed:
-                    0.01 +
-                    Math.random() * 0.025,
-
                 active: true
 
             });
 
         });
 
-        dimensionCount.textContent =
-            nodes.length;
+        if (dimensionCount) {
+            dimensionCount.textContent =
+                nodes.length;
+        }
 
-        signatureCount.textContent =
-            nodes.length;
+        if (signatureCount) {
+            signatureCount.textContent =
+                nodes.length;
+        }
 
-        activeRealities.textContent =
-            nodes.length;
+        if (activeRealities) {
+            activeRealities.textContent =
+                nodes.length;
+        }
 
     }
 
@@ -217,30 +256,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         particles = [];
 
-        for (
-            let i = 0;
-            i < 500;
-            i++
-        ) {
+        for (let i = 0; i < 600; i++) {
 
             particles.push({
 
                 x:
                     (Math.random() - 0.5) *
-                    2500,
+                    3000,
 
                 y:
                     (Math.random() - 0.5) *
-                    1800,
+                    2200,
 
                 size:
                     Math.random() * 1.5,
 
                 opacity:
-                    Math.random(),
-
-                speed:
-                    Math.random() * 0.2
+                    0.2 +
+                    Math.random() * 0.8
 
             });
 
@@ -253,67 +286,19 @@ document.addEventListener("DOMContentLoaded", () => {
        COORDONNEES
     ===================================================== */
 
-    function updateTelemetry() {
-
-        telemetryX.textContent =
-            Math.floor(
-                camera.x
-            ).toString()
-            .padStart(3, "0");
-
-        telemetryY.textContent =
-            Math.floor(
-                camera.y
-            ).toString()
-            .padStart(3, "0");
-
-        telemetryZ.textContent =
-            Math.floor(
-                camera.zoom * 100
-            ).toString()
-            .padStart(3, "0");
-
-    }
-
-
-    /* =====================================================
-       TERMINAL
-    ===================================================== */
-
-    function log(message) {
-
-        terminal.innerHTML +=
-            "<br>> " + message;
-
-        terminal.scrollTop =
-            terminal.scrollHeight;
-
-    }
-
-
-    /* =====================================================
-       TRANSFORMATION MONDE → ECRAN
-    ===================================================== */
-
     function worldToScreen(node) {
-
-        const width =
-            canvas.clientWidth;
-
-        const height =
-            canvas.clientHeight;
 
         return {
 
             x:
-                width / 2 +
-                (node.x + camera.x) *
-                camera.zoom,
+                canvas.clientWidth / 2 +
+                (node.x + cameraX) *
+                zoom,
 
             y:
-                height / 2 +
-                (node.y + camera.y) *
-                camera.zoom
+                canvas.clientHeight / 2 +
+                (node.y + cameraY) *
+                zoom
 
         };
 
@@ -321,22 +306,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       DESSIN DES ETOILES
+       PARTICULES
     ===================================================== */
 
     function drawParticles() {
 
-        particles.forEach(particle => {
+        particles.forEach(function (particle) {
 
             const x =
                 canvas.clientWidth / 2 +
-                (particle.x + camera.x * 0.2) *
-                camera.zoom;
+                (particle.x + cameraX * 0.2) *
+                zoom;
 
             const y =
                 canvas.clientHeight / 2 +
-                (particle.y + camera.y * 0.2) *
-                camera.zoom;
+                (particle.y + cameraY * 0.2) *
+                zoom;
 
             if (
                 x < 0 ||
@@ -373,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       DESSIN DU RESEAU
+       CONNEXIONS
     ===================================================== */
 
     function drawConnections() {
@@ -390,20 +375,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 continue;
             }
 
-            let closest = null;
-
-            let closestDistance =
-                Infinity;
-
             for (
-                let j = 0;
+                let j = i + 1;
                 j < nodes.length;
                 j++
             ) {
-
-                if (i === j) {
-                    continue;
-                }
 
                 const b = nodes[j];
 
@@ -423,30 +399,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         dy * dy
                     );
 
-                if (
-                    distance <
-                    closestDistance
-                ) {
-
-                    closestDistance =
-                        distance;
-
-                    closest = b;
-
+                if (distance > 230) {
+                    continue;
                 }
-
-            }
-
-            if (
-                closest &&
-                closestDistance < 250
-            ) {
 
                 const posA =
                     worldToScreen(a);
 
                 const posB =
-                    worldToScreen(closest);
+                    worldToScreen(b);
 
                 ctx.beginPath();
 
@@ -475,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       CENTRE DU MULTIVERS
+       CENTRE
     ===================================================== */
 
     function drawCenter() {
@@ -486,8 +447,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const y =
             canvas.clientHeight / 2;
 
-        const radius =
-            45 * camera.zoom;
+        const pulse =
+            35 +
+            Math.sin(
+                Date.now() * 0.002
+            ) * 5;
 
         const gradient =
             ctx.createRadialGradient(
@@ -496,7 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 0,
                 x,
                 y,
-                radius
+                pulse
             );
 
         gradient.addColorStop(
@@ -505,7 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         gradient.addColorStop(
-            0.2,
+            0.25,
             "rgba(100,255,170,0.25)"
         );
 
@@ -522,7 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.arc(
             x,
             y,
-            radius,
+            pulse,
             0,
             Math.PI * 2
         );
@@ -531,14 +495,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         ctx.strokeStyle =
-            "rgba(120,255,180,0.3)";
+            "rgba(130,255,190,0.4)";
 
         ctx.beginPath();
 
         ctx.arc(
             x,
             y,
-            30,
+            25,
             0,
             Math.PI * 2
         );
@@ -570,7 +534,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function drawNodes() {
 
-        nodes.forEach(node => {
+        nodes.forEach(function (node) {
 
             if (!node.active) {
                 return;
@@ -580,18 +544,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 worldToScreen(node);
 
             if (
-                pos.x < -30 ||
+                pos.x < -50 ||
                 pos.x >
-                canvas.clientWidth + 30 ||
-                pos.y < -30 ||
+                canvas.clientWidth + 50 ||
+                pos.y < -50 ||
                 pos.y >
-                canvas.clientHeight + 30
+                canvas.clientHeight + 50
             ) {
                 return;
             }
 
-            node.pulse +=
-                node.speed;
+            node.pulse += 0.04;
 
             const pulse =
                 Math.sin(
@@ -608,7 +571,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     0,
                     pos.x,
                     pos.y,
-                    25 + pulse
+                    25
                 );
 
             glow.addColorStop(
@@ -629,7 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.arc(
                 pos.x,
                 pos.y,
-                25 + pulse,
+                25,
                 0,
                 Math.PI * 2
             );
@@ -637,7 +600,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fill();
 
 
-            /* POINT */
+            /* PLANETE */
 
             ctx.fillStyle =
                 "#8affc1";
@@ -647,7 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.arc(
                 pos.x,
                 pos.y,
-                node.radius + pulse * 0.3,
+                node.radius + pulse,
                 0,
                 Math.PI * 2
             );
@@ -658,14 +621,14 @@ document.addEventListener("DOMContentLoaded", () => {
             /* CERCLE */
 
             ctx.strokeStyle =
-                "rgba(150,255,200,0.35)";
+                "rgba(150,255,200,0.4)";
 
             ctx.beginPath();
 
             ctx.arc(
                 pos.x,
                 pos.y,
-                9 + pulse,
+                10 + pulse,
                 0,
                 Math.PI * 2
             );
@@ -675,22 +638,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             /* NOM */
 
-            if (
-                camera.zoom > 0.7
-            ) {
+            if (zoom > 0.65) {
+
+                ctx.fillStyle =
+                    "rgba(170,255,210,0.7)";
 
                 ctx.font =
                     "10px monospace";
-
-                ctx.fillStyle =
-                    "rgba(170,255,210,0.65)";
 
                 ctx.textAlign =
                     "left";
 
                 ctx.fillText(
                     node.planet.nom,
-                    pos.x + 12,
+                    pos.x + 13,
                     pos.y - 10
                 );
 
@@ -722,7 +683,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         drawNodes();
 
-        updateTelemetry();
+        if (telemetryX) {
+            telemetryX.textContent =
+                Math.floor(cameraX);
+        }
+
+        if (telemetryY) {
+            telemetryY.textContent =
+                Math.floor(cameraY);
+        }
+
+        if (telemetryZ) {
+            telemetryZ.textContent =
+                Math.floor(zoom * 100);
+        }
 
         requestAnimationFrame(
             animate
@@ -732,14 +706,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       CLICK PLANETE
+       CLIC
     ===================================================== */
 
     canvas.addEventListener(
         "click",
-        event => {
+        function (event) {
 
-            if (dragging) {
+            if (movedMouse) {
+                movedMouse = false;
                 return;
             }
 
@@ -756,7 +731,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let found = null;
 
-            nodes.forEach(node => {
+            nodes.forEach(function (node) {
 
                 if (!node.active) {
                     return;
@@ -771,13 +746,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         mouseY - pos.y
                     );
 
-                if (
-                    distance <
-                    15
-                ) {
-
+                if (distance < 18) {
                     found = node;
-
                 }
 
             });
@@ -796,56 +766,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 found.planet.dimension;
 
             popupCoordinates.textContent =
-                Math.floor(found.x) +
+                Math.round(found.x) +
                 " / " +
-                Math.floor(found.y);
+                Math.round(found.y);
 
             popupStatus.textContent =
-                found.active
-                    ? "STABLE"
-                    : "OFFLINE";
+                "STABLE";
 
             popup.classList.add(
                 "active"
             );
 
-        }
-    );
-
-
-    /* =====================================================
-       FERMER POPUP
-    ===================================================== */
-
-    popupClose.addEventListener(
-        "click",
-        () => {
-
-            popup.classList.remove(
-                "active"
+            terminalLog(
+                "Signature sélectionnée : " +
+                found.planet.nom
             );
-
-        }
-    );
-
-
-    /* =====================================================
-       OUVRIR PLANETE
-    ===================================================== */
-
-    openPlanet.addEventListener(
-        "click",
-        () => {
-
-            if (!selectedPlanet) {
-                return;
-            }
-
-            window.location.href =
-                "planete.php?nom=" +
-                encodeURIComponent(
-                    selectedPlanet.planet.nom
-                );
 
         }
     );
@@ -857,31 +792,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     canvas.addEventListener(
         "mousedown",
-        event => {
+        function (event) {
 
             dragging = true;
 
-            lastMouse.x =
+            movedMouse = false;
+
+            lastMouseX =
                 event.clientX;
 
-            lastMouse.y =
+            lastMouseY =
                 event.clientY;
 
         }
     );
 
-    window.addEventListener(
-        "mouseup",
-        () => {
-
-            dragging = false;
-
-        }
-    );
 
     window.addEventListener(
         "mousemove",
-        event => {
+        function (event) {
 
             if (!dragging) {
                 return;
@@ -889,25 +818,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const dx =
                 event.clientX -
-                lastMouse.x;
+                lastMouseX;
 
             const dy =
                 event.clientY -
-                lastMouse.y;
+                lastMouseY;
 
-            camera.x +=
-                dx /
-                camera.zoom;
+            if (
+                Math.abs(dx) > 2 ||
+                Math.abs(dy) > 2
+            ) {
 
-            camera.y +=
-                dy /
-                camera.zoom;
+                movedMouse = true;
 
-            lastMouse.x =
+            }
+
+            cameraX +=
+                dx / zoom;
+
+            cameraY +=
+                dy / zoom;
+
+            lastMouseX =
                 event.clientX;
 
-            lastMouse.y =
+            lastMouseY =
                 event.clientY;
+
+        }
+    );
+
+
+    window.addEventListener(
+        "mouseup",
+        function () {
+
+            dragging = false;
 
         }
     );
@@ -919,59 +865,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     canvas.addEventListener(
         "wheel",
-        event => {
+        function (event) {
 
             event.preventDefault();
 
-            const oldZoom =
-                camera.zoom;
-
             if (event.deltaY < 0) {
 
-                camera.zoom *=
-                    1.12;
+                zoom *= 1.12;
 
             } else {
 
-                camera.zoom *=
-                    0.88;
+                zoom *= 0.88;
 
             }
 
-            camera.zoom =
+            zoom =
                 Math.max(
-                    0.35,
+                    0.3,
                     Math.min(
-                        camera.zoom,
+                        zoom,
                         4
                     )
-                );
-
-            const rect =
-                canvas.getBoundingClientRect();
-
-            const mouseX =
-                event.clientX -
-                rect.left -
-                canvas.clientWidth / 2;
-
-            const mouseY =
-                event.clientY -
-                rect.top -
-                canvas.clientHeight / 2;
-
-            camera.x -=
-                mouseX *
-                (
-                    1 / camera.zoom -
-                    1 / oldZoom
-                );
-
-            camera.y -=
-                mouseY *
-                (
-                    1 / camera.zoom -
-                    1 / oldZoom
                 );
 
         },
@@ -987,63 +901,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     simulateButton.addEventListener(
         "click",
-        () => {
+        function () {
 
-            if (simulationRunning) {
-                return;
-            }
-
-            simulationRunning = true;
+            console.log(
+                "SIMULATION CLICK"
+            );
 
             systemStatus.textContent =
                 "SIMULATION";
 
-            log(
+            terminalLog(
                 "MULTIVERSE SIMULATION STARTED."
             );
 
-            log(
-                "Scanning dimensional anomalies..."
-            );
+            setTimeout(function () {
 
-            setTimeout(
-                () => {
+                terminalLog(
+                    "Quantum fluctuations detected."
+                );
 
-                    log(
-                        "Quantum fluctuations detected."
-                    );
+            }, 700);
 
-                },
-                1000
-            );
+            setTimeout(function () {
 
-            setTimeout(
-                () => {
+                terminalLog(
+                    "Reality connections recalculated."
+                );
 
-                    log(
-                        "Reality connections recalculated."
-                    );
+            }, 1400);
 
-                },
-                2000
-            );
+            setTimeout(function () {
 
-            setTimeout(
-                () => {
+                terminalLog(
+                    "New dimensional signatures detected."
+                );
 
-                    log(
-                        "Simulation stabilized."
-                    );
+                systemStatus.textContent =
+                    "STABLE";
 
-                    systemStatus.textContent =
-                        "STABLE";
-
-                    simulationRunning =
-                        false;
-
-                },
-                3500
-            );
+            }, 2100);
 
         }
     );
@@ -1055,108 +951,107 @@ document.addEventListener("DOMContentLoaded", () => {
 
     collapseButton.addEventListener(
         "click",
-        () => {
+        function () {
 
-            if (collapseRunning) {
+            console.log(
+                "COLLAPSE CLICK"
+            );
+
+            if (collapseTimer) {
                 return;
             }
 
-            collapseRunning = true;
-
-            collapseOverlay.classList.add(
-                "active"
-            );
-
-            stability = 100;
-
-            log(
-                "⚠ MULTIVERSE COLLAPSE INITIATED."
-            );
-
-            let collapse =
-                setInterval(
-                    () => {
-
-                        stability -=
-                            Math.random() * 5;
-
-                        stability =
-                            Math.max(
-                                0,
-                                stability
-                            );
-
-                        stabilityBar.style.width =
-                            stability + "%";
-
-                        stabilityValue.textContent =
-                            Math.floor(
-                                stability
-                            ) + "%";
-
-                        collapsePercent.textContent =
-                            Math.floor(
-                                stability
-                            ) + "%";
-
-                        const active =
-                            Math.ceil(
-                                nodes.length *
-                                stability /
-                                100
-                            );
-
-                        activeRealities.textContent =
-                            active;
-
-                        nodes.forEach(
-                            node => {
-
-                                if (
-                                    Math.random() >
-                                    stability / 100
-                                ) {
-
-                                    node.active =
-                                        false;
-
-                                }
-
-                            }
-                        );
-
-                        if (
-                            stability <= 4
-                        ) {
-
-                            clearInterval(
-                                collapse
-                            );
-
-                            stability =
-                                4;
-
-                            stabilityValue.textContent =
-                                "4%";
-
-                            collapsePercent.textContent =
-                                "4%";
-
-                            systemStatus.textContent =
-                                "CRITICAL";
-
-                            log(
-                                "!!! MULTIVERSE CRITICAL !!!"
-                            );
-
-                        }
-
-                    },
-                    180
-                );
+            collapseRunning();
 
         }
     );
+
+
+    function collapseRunning() {
+
+        stability = 100;
+
+        collapseOverlay.classList.add(
+            "active"
+        );
+
+        systemStatus.textContent =
+            "CRITICAL";
+
+        terminalLog(
+            "⚠ MULTIVERSE COLLAPSE INITIATED."
+        );
+
+        collapseTimer =
+            setInterval(function () {
+
+                stability -=
+                    Math.random() * 5 + 1;
+
+                stability =
+                    Math.max(
+                        4,
+                        stability
+                    );
+
+
+                stabilityValue.textContent =
+                    Math.floor(stability) +
+                    "%";
+
+                stabilityBar.style.width =
+                    stability +
+                    "%";
+
+                collapsePercent.textContent =
+                    Math.floor(stability) +
+                    "%";
+
+
+                const active =
+                    Math.ceil(
+                        nodes.length *
+                        stability /
+                        100
+                    );
+
+                activeRealities.textContent =
+                    active;
+
+
+                nodes.forEach(function (node) {
+
+                    if (
+                        Math.random() >
+                        stability / 100
+                    ) {
+
+                        node.active =
+                            false;
+
+                    }
+
+                });
+
+
+                if (stability <= 4) {
+
+                    clearInterval(
+                        collapseTimer
+                    );
+
+                    collapseTimer =
+                        null;
+
+                    terminalLog(
+                        "!!! MULTIVERSE CRITICAL !!!"
+                    );
+
+                }
+
+            }, 180);
+
+    }
 
 
     /* =====================================================
@@ -1165,7 +1060,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resetButton.addEventListener(
         "click",
-        () => {
+        function () {
+
+            console.log(
+                "RESET CLICK"
+            );
+
+            if (collapseTimer) {
+
+                clearInterval(
+                    collapseTimer
+                );
+
+                collapseTimer =
+                    null;
+
+            }
 
             collapseOverlay.classList.remove(
                 "active"
@@ -1182,18 +1092,49 @@ document.addEventListener("DOMContentLoaded", () => {
             systemStatus.textContent =
                 "STABLE";
 
+            cameraX = 0;
+            cameraY = 0;
+            zoom = 1;
+
             createNodes();
 
-            camera.x = 0;
-            camera.y = 0;
-            camera.zoom = 1;
-
-            collapseRunning =
-                false;
-
-            log(
+            terminalLog(
                 "MULTIVERSE RESET."
             );
+
+        }
+    );
+
+
+    /* =====================================================
+       POPUP
+    ===================================================== */
+
+    popupClose.addEventListener(
+        "click",
+        function () {
+
+            popup.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    openPlanet.addEventListener(
+        "click",
+        function () {
+
+            if (!selectedPlanet) {
+                return;
+            }
+
+            window.location.href =
+                "planete.php?nom=" +
+                encodeURIComponent(
+                    selectedPlanet.planet.nom
+                );
 
         }
     );
@@ -1205,22 +1146,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fullscreenButton.addEventListener(
         "click",
-        async () => {
+        async function () {
 
-            if (!document.fullscreenElement) {
+            try {
 
-                await document.documentElement
-                    .requestFullscreen();
+                if (!document.fullscreenElement) {
 
-                fullscreenButton.textContent =
-                    "✕ EXIT FULLSCREEN";
+                    await document.documentElement
+                        .requestFullscreen();
 
-            } else {
+                    fullscreenButton.textContent =
+                        "✕ EXIT FULLSCREEN";
 
-                await document.exitFullscreen();
+                } else {
 
-                fullscreenButton.textContent =
-                    "⛶ FULLSCREEN";
+                    await document.exitFullscreen();
+
+                    fullscreenButton.textContent =
+                        "⛶ FULLSCREEN";
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Fullscreen error:",
+                    error
+                );
 
             }
 
@@ -1236,20 +1188,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     createParticles();
 
-    log(
+    terminalLog(
         planets.length +
         " planetary signature(s) loaded."
     );
 
-    log(
+    terminalLog(
         "Multiverse visualization online."
     );
 
-    log(
+    terminalLog(
         "Awaiting command..."
     );
 
     animate();
 
 });
-
+```
