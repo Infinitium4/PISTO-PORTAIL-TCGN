@@ -359,6 +359,10 @@ body > p {
     font-weight: bold;
 
     transition: 0.25s;
+
+    position: absolute;
+    top: 41px;
+    left: 55px;
 }
 
 .retour:hover {
