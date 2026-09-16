@@ -1,4 +1,3 @@
-```javascript
 document.addEventListener("DOMContentLoaded", function () {
 
     console.log("MULTIVERSE JS chargé");
@@ -1204,4 +1203,3 @@ document.addEventListener("DOMContentLoaded", function () {
     animate();
 
 });
-```
