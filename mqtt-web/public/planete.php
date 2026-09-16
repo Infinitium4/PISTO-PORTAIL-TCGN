@@ -72,7 +72,7 @@ if (!$planete) {
                 >
 
                 <div class="dangerometre">
-                    <h2>☠️ Dangeromètre</h2>
+                    <h2>Dangeromètre</h2>
 
                     <div class="danger-bar">
                         <div
