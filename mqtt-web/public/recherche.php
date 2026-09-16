@@ -29,11 +29,13 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Recherche</title>
+    <link rel="stylesheet" href="recherche.css">
+
 </head>
 
 <body>
 
-    <h1>Recherche</h1>
+    <h1>Recherches</h1>
 
     <form method="GET">
 
@@ -45,6 +47,10 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
 
         <button type="submit">
             Rechercher
+        </button>
+
+        <button type="submit">
+            Show All
         </button>
 
     </form>
@@ -60,9 +66,28 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
         </p>
 
         <p>
-            <?= htmlspecialchars($u['info_complementaire']) ?>
+            Cette planète se trouve dans la dimension :
+            <?= htmlspecialchars($u['dimension']) ?>
         </p>
 
+        <p>
+            Température en temps réel :
+            <?= htmlspecialchars($u['temperature']) ?> °C
+        </p>
+
+        <p>
+            Température minimale :
+            <?= htmlspecialchars($u['temperature_min']) ?> °C
+        </p>
+
+        <p>
+            Température maximale :
+            <?= htmlspecialchars($u['temperature_max']) ?> °C
+        </p>
+
+        <p>
+            <?= htmlspecialchars($u['info_complementaire']) ?>
+        </p>
 
     <?php } ?>
 
