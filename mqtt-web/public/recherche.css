@@ -511,77 +511,195 @@ body > p {
 
 .dangerometre {
     margin-top: 30px;
+
     padding: 25px;
 
-    background: rgba(255, 255, 255, 0.04);
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(85, 255, 153, 0.08),
+            transparent 65%
+        ),
+        rgba(3, 12, 15, 0.95);
 
-    border: 1px solid rgba(255, 80, 80, 0.4);
+    border: 2px solid #55ff99;
 
-    border-radius: 15px;
-
-    cursor: url("images/morty-cursor.png") 16 16, auto;
-
-    transition: 0.3s;
-}
-
-.dangerometre:hover {
-    border-color: #ff5555;
+    border-radius: 18px;
 
     box-shadow:
-        0 0 15px rgba(255, 80, 80, 0.3),
-        inset 0 0 20px rgba(255, 80, 80, 0.05);
-}
+        0 0 10px rgba(85, 255, 153, 0.4),
+        0 0 30px rgba(85, 255, 153, 0.15),
+        inset 0 0 25px rgba(85, 255, 153, 0.05);
 
-.dangerometre h2 {
-    margin-bottom: 20px;
-}
-
-
-
-.danger-bar {
-    width: 100%;
-    height: 25px;
-
-    background: rgba(0, 0, 0, 0.5);
-
-    border: 1px solid rgba(255, 255, 255, 0.2);
-
-    border-radius: 20px;
+    position: relative;
 
     overflow: hidden;
 }
 
 
+/* Petit effet lumineux qui traverse le dangeromètre */
+
+.dangerometre::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 50%;
+    height: 2px;
+
+    background: #8affc1;
+
+    box-shadow:
+        0 0 10px #55ff99,
+        0 0 20px #55ff99;
+
+    animation: scanner 3s linear infinite;
+}
+
+@keyframes scanner {
+
+    0% {
+        left: -50%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+
+
+.dangerometre h2 {
+    margin-bottom: 20px;
+
+    color: #8affc1;
+
+    font-size: 26px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    text-shadow:
+        0 0 5px #55ff99,
+        0 0 15px rgba(85, 255, 153, 0.7);
+}
+
+
+/* Barre */
+
+.danger-bar {
+    width: 100%;
+
+    height: 28px;
+
+    padding: 4px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            rgba(85, 255, 153, 0.08) 0px,
+            rgba(85, 255, 153, 0.08) 8px,
+            transparent 8px,
+            transparent 14px
+        ),
+        #020708;
+
+    border: 1px solid rgba(138, 255, 193, 0.6);
+
+    border-radius: 6px;
+
+    overflow: hidden;
+
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.9),
+        0 0 10px rgba(85, 255, 153, 0.2);
+}
+
+
+/* Niveau de danger */
 
 .danger-progress {
     height: 100%;
 
-    background: linear-gradient(
-        90deg,
-        #55ff99,
-        #ffe600,
-        #ff8c00,
-        #ff3333
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #55ff99 0%,
+            #55ff99 25%,
+            #ffe600 50%,
+            #ff8c00 75%,
+            #ff3333 100%
+        );
 
-    border-radius: 20px;
+    border-radius: 3px;
 
     box-shadow:
-        0 0 15px rgba(255, 50, 50, 0.6);
+        0 0 8px #55ff99,
+        0 0 15px rgba(255, 50, 50, 0.5);
 
     transition: width 0.8s ease;
+
+    position: relative;
 }
 
 
+/* Petites lignes futuristes sur la jauge */
+
+.danger-progress::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 10px,
+            rgba(255,255,255,0.25) 10px,
+            rgba(255,255,255,0.25) 11px
+        );
+
+    animation: dangerScan 1s linear infinite;
+}
+
+@keyframes dangerScan {
+
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(20px);
+    }
+}
+
 
 .dangerometre p {
-    margin-top: 12px;
+    margin-top: 15px;
+
+    padding: 10px;
 
     color: #ff7777;
 
     font-weight: bold;
 
     text-align: center;
+
+    letter-spacing: 1px;
+
+    background: rgba(255, 50, 50, 0.06);
+
+    border: 1px solid rgba(255, 80, 80, 0.2);
+
+    border-radius: 8px;
+
+    text-shadow:
+        0 0 8px rgba(255, 50, 50, 0.6);
 }
 
 
