@@ -20,9 +20,9 @@
             console.error("Received data:", data);
             console.error("Received message:", message);
 
-            if (message.action === "portail") {
+            if (message.action === "portail") { 
 
-                const nomVideo = message.dimension.trim() + ".mp4";
+                const nomVideo = message.dimension + ".mp4";
 
                 video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
                 video.load();
