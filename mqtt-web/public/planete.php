@@ -109,6 +109,23 @@ if (!$planete) {
                     <?= nl2br(htmlspecialchars($planete['info_complementaire'])) ?>
                 </p>
 
+                <div class="dangerometre">
+
+                    <h2>☠️ Dangeromètre</h2>
+
+                    <div class="danger-bar">
+                        <div
+                            class="danger-progress"
+                            style="width: <?= ($planete['danger'] / 5) * 100 ?>%;"
+                        ></div>
+                    </div>
+
+                    <p>
+                        Niveau <?= htmlspecialchars($planete['danger']) ?> / 5
+                    </p>
+
+                </div>
+
             </div>
 
         </section>
