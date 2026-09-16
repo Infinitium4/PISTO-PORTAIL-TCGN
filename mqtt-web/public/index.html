@@ -15,12 +15,14 @@
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            const message = JSON.parse(data.message);
 
-            console.error("Received message:", data);
+            console.error("Received data:", data);
+            console.error("Received message:", message);
 
-            if (data.action === "portail") {
+            if (message.action === "portail") {
 
-                const nomVideo = data.message.trim() + ".mp4";
+                const nomVideo = message.dimension.trim() + ".mp4";
 
                 video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
                 video.load();
@@ -30,8 +32,8 @@
                 });
             }
 
-            if (data.action === "wiki"){
-                window.location.href = "/planete.php?nom=" + encodeURIComponent(data.message.dimension);
+            if (message.action === "wiki"){
+                window.location.href = "/mqtt-web/public/planete.php?nom=" + encodeURIComponent(message.dimension);
             }
         };
 

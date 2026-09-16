@@ -45,13 +45,13 @@ if (!$planete) {
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            const message = JSON.parse(event.data);
+            const message = JSON.parse(data.message);
 
             console.error("Received data:", data);
-            console.error("Received message:", message);
+            console.error("Received message:", message.action);
 
             if (message.action === "retour"){
-                window.location.href = "/";
+                window.location.href = "/mqtt-web/public/";
             }
         };
     </script>
