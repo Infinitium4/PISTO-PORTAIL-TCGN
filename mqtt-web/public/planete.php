@@ -1,8 +1,9 @@
+```php
 <?php
 
 require_once 'logBDD.php';
 
-if (!isset($_GET['nom'])) {
+if (!isset($_GET['nom']) || $_GET['nom'] === '') {
     die("Planète introuvable.");
 }
 
@@ -13,7 +14,7 @@ $stmt = $pdo->prepare(
 );
 
 $stmt->execute([
-    'nom' => $_GET['nom']
+    'nom' => $nom
 ]);
 
 $planete = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -42,7 +43,7 @@ if (!$planete) {
 
     <main class="wiki">
 
-        <a href="recherche.php" class="retour">
+        <a href="rechercher.php" class="retour">
             ← Retour aux recherches
         </a>
 
@@ -55,14 +56,32 @@ if (!$planete) {
             <h2>Informations générales</h2>
 
             <p>
-                <strong>Température :</strong>
+                Température :
                 <?= htmlspecialchars($planete['temperature']) ?> °C
             </p>
 
-            <h2>Description</h2>
+            <p>
+                Cette planète se trouve dans la dimension :
+                <?= htmlspecialchars($planete['dimension']) ?>
+            </p>
 
             <p>
-                <?= nl2br(htmlspecialchars($planete['info_complementaire'])) ?>
+                Température en temps réel :
+                <?= htmlspecialchars($planete['temperature']) ?> °C
+            </p>
+
+            <p>
+                Température minimale :
+                <?= htmlspecialchars($planete['temperature_min']) ?> °C
+            </p>
+
+            <p>
+                Température maximale :
+                <?= htmlspecialchars($planete['temperature_max']) ?> °C
+            </p>
+
+            <p>
+                <?= htmlspecialchars($planete['info_complementaire']) ?>
             </p>
 
         </section>
