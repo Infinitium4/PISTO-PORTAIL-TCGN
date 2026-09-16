@@ -49,11 +49,12 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
             Rechercher
         </button>
 
-        <button type="submit">
+        <button type="button" onclick="window.location.href='rechercher.php'">
             Show All
         </button>
 
     </form>
+
 
 
     <?php foreach ($univers as $u) { ?>
