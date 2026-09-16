@@ -20,7 +20,7 @@
             console.error("Received data:", data);
             console.error("Received message:", message);
 
-            if (message.action === "wiki-retour") {
+            if (message.action === "portail") {
 
                 const nomVideo = message.dimension.trim() + ".mp4";
 
@@ -32,7 +32,7 @@
                 });
             }
 
-            if (message.action === "wiki"){
+            if (message.action === "wiki-retour"){
                 window.location.href = "/mqtt-web/public/planete.php?nom=" + encodeURIComponent(message.dimension);
             }
         };
