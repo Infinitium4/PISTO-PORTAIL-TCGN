@@ -21,7 +21,8 @@
             video.src = "/mqtt-web/public/media/" + encodeURIComponent(nomVideo);
             video.load();
             video.play().catch(error => {
-                console.error("Impossible de lancer la vidéo :", error);
+                video.src = "/mqtt-web/public/media/error.mp4";
+                video.load();
             });
         };
 
