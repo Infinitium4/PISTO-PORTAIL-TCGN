@@ -71,7 +71,7 @@ else {
     <?php foreach ($univers as $u) { ?>
 
         <h2>
-            <a href="planete.php?id=<?= $u['id'] ?>">
+            <a href="planete.php?nom=<?= urlencode($u['nom']) ?>">
                 <?= htmlspecialchars($u['nom']) ?>
             </a>
         </h2>

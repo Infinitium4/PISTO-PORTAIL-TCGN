@@ -2,18 +2,18 @@
 
 require_once 'logBDD.php';
 
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+if (!isset($_GET['nom'])) {
     die("Planète introuvable.");
 }
 
-$id = $_GET['id'];
+$nom = $_GET['nom'];
 
 $stmt = $pdo->prepare(
-    "SELECT * FROM univers WHERE id = :id"
+    "SELECT * FROM univers WHERE nom = :nom"
 );
 
 $stmt->execute([
-    'id' => $id
+    'nom' => $_GET['nom']
 ]);
 
 $planete = $stmt->fetch(PDO::FETCH_ASSOC);
