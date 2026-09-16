@@ -50,6 +50,13 @@ if (isset($_GET['recherche']) && $_GET['recherche'] !== '') {
         </button>
 
     </form>
+    <form method="GET">
+
+        <button type="submit">
+            Show All
+        </button>
+
+    </form>
 
 
     <?php foreach ($univers as $u) { ?>
