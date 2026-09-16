@@ -37,7 +37,6 @@ if (!$planete) {
     <link rel="stylesheet" href="recherche.css">
 
 </head>
-<script src="script.js"></script>
 
 <body style="overflow: hidden;">
 
@@ -279,6 +278,9 @@ setTimeout(() => {
 
 }, 500);
 </script>
+
+<script src="script.js"></script>
+
 </body>
 
 </html>
