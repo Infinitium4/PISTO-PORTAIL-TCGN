@@ -78,28 +78,8 @@ else {
             <div class="planete-info"> 
  
                 <div class="info"> 
-                    <strong>Température :</strong> 
-                    <span><?= htmlspecialchars($u['temperature']) ?> °C</span> 
-                </div> 
- 
-                <div class="info"> 
                     <strong>Dimension :</strong> 
                     <span><?= htmlspecialchars($u['dimension']) ?></span> 
-                </div> 
- 
-                <div class="info"> 
-                    <strong>Température en temps réel :</strong> 
-                    <span><?= htmlspecialchars($u['temperature']) ?> °C</span> 
-                </div> 
- 
-                <div class="info"> 
-                    <strong>Température minimale :</strong> 
-                    <span><?= htmlspecialchars($u['temperature_min']) ?> °C</span> 
-                </div> 
- 
-                <div class="info"> 
-                    <strong>Température maximale :</strong> 
-                    <span><?= htmlspecialchars($u['temperature_max']) ?> °C</span> 
                 </div> 
  
                 <div class="info description"> 
