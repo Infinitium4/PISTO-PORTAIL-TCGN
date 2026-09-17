@@ -1,0 +1,16 @@
+Le site WEB est découpé en deux page distincte. Il y'a tout dabord la page rechercher.php qui est la page principal du Wiki des planetes. 
+Elle permet de rechercher des planetes à l'aide d'une recherche. On est pas obligé de rentrer le nom complet de la planete, il est possible de ne rentrer qu'une partie du nom de la planete.
+Lorsqu'une recherche est faite, une requête est envoyé à la BDD pour récupérer les infos des planetes nécessaire. Ce ne sont que des "Select * from univers where .......". On a ajoute juste une condition à la requête pour pouvoir filtrer les planetes.
+De la page d'accès il y'a la possibilité d'ouvrir la page WIKI de la planete de notre choix. On est alors redirigé vers la page planete.php qui affiche toute les infos de la planete.
+De la même manière que pour la page rechercher.php des requêtes sont faites à la bases de donnée pour afficher les infos. On ajoute ensuite du css qui permet de finaliser l'aspect visuel du site. 
+Le site WEB est découpé en deux pages distinctes. Il y a tout d’abord la page `rechercher.php`, qui est la page principale du Wiki des planètes.
+
+Elle permet de rechercher des planètes à l’aide d’une recherche. On n’est pas obligé de rentrer le nom complet de la planète, il est possible de ne rentrer qu’une partie du nom de la planète.
+
+Lorsqu’une recherche est faite, une requête est envoyée à la BDD pour récupérer les informations des planètes nécessaires. Ce ne sont que des « Select * from univers where ....... ». On ajoute juste une condition à la requête pour pouvoir filtrer les planètes.
+
+Depuis la page d’accès, il y a la possibilité d’ouvrir la page WIKI de la planète de notre choix. On est alors redirigé vers la page `planete.php`, qui affiche toutes les informations de la planète.
+
+De la même manière que pour la page `rechercher.php`, des requêtes sont faites à la base de données pour afficher les informations. On ajoute ensuite du CSS qui permet de finaliser l’aspect visuel du site.
+Les planètes sont envoyées dans l’URL par la méthode GET, ce qui permet d’afficher le nom de la planète dans l’URL. C’est ce qui rend plus facile la récupération des informations pour l’ESP32, mais aussi pour le système de renvoi vers la page Wiki à partir du Pisto-Portal.
+Dans notre cas, cela est très utile pour que `planete.php` puisse récupérer les informations, notamment le nom de la planète.
