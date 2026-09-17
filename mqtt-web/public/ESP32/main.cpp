@@ -17,9 +17,11 @@ const int MAX_DIMENSIONS = 20;
 String dimensions[MAX_DIMENSIONS];
 int NB_DIMENSIONS = 0;
 int currentDimension = 0;
+unsigned long retourEcran = 0;
+bool attenteRetour = false;
 
 // ---------- CONFIG LED ----------
-const int LED_BASE = 50;    // intensité de base en continu (0-255)
+const int LED_BASE = 150;    // intensité de base en continu (0-255)
 const int LED_BOOST = 255;  // intensité max pendant le boost
 const unsigned long boostDuration = 5000; // durée du boost en ms
 bool ledBoosting = false;
@@ -77,19 +79,33 @@ void chargerDimensionsDepuisServeur() {
 void connectWiFi() {
   Serial.print("Connexion WiFi");
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+  unsigned long startAttempt = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 15000) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("\nWiFi connecte, IP: " + WiFi.localIP().toString());
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\nWiFi connecte, IP: " + WiFi.localIP().toString());
+  } else {
+    Serial.println("\nEchec de connexion WiFi (timeout)");
+  }
 }
 
 void connectMQTT() {
+  // vérifie d'abord que le WiFi est bien là avant de tenter MQTT
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("WiFi perdu, tentative de reconnexion...");
+    connectWiFi();
+    if (WiFi.status() != WL_CONNECTED) {
+      return; // on abandonne cette tentative, on réessaiera au prochain tour de loop()
+    }
+  }
+
   client.setServer(mqtt_server, mqtt_port);
 
-  while (!client.connected()) {
+  int tentatives = 0;
+  while (!client.connected() && tentatives < 3) { // limité à 3 essais, pas infini
     Serial.print("Connexion MQTT... ");
-
     if (client.connect("ESP32_Client", mqtt_user, mqtt_password)) {
       Serial.println("connecte !");
     } else {
@@ -97,6 +113,7 @@ void connectMQTT() {
       Serial.print(client.state());
       Serial.println(" nouvelle tentative dans 2s");
       delay(2000);
+      tentatives++;
     }
   }
 }
@@ -147,10 +164,14 @@ void loop() {
 
   int x = analogRead(JOY_X);
   int sw = digitalRead(JOY_SW);
+  int y = analogRead(JOY_Y);
 
   if (sw == LOW) {
     lcd.clear();
     lcd.print("Synchronisation");
+    myDFPlayer.play(5);
+
+    delay(2000);
 
     chargerDimensionsDepuisServeur();
 
@@ -160,14 +181,16 @@ void loop() {
     lcd.setCursor(0,1);
     lcd.print("dimensions");
 
-    delay(500);
+    retourEcran = millis();
+    attenteRetour = true;
 
     while (digitalRead(JOY_SW) == LOW) {
       delay(10);
     }
   }
 
-  if (x == 0){
+  if (x == 0 && NB_DIMENSIONS != 0){
+    myDFPlayer.play(2);
     lcd.clear();
     currentDimension = (currentDimension - 1 + NB_DIMENSIONS) % NB_DIMENSIONS;
     lcd.setCursor(0, 0);
@@ -175,12 +198,13 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print(dimensions[currentDimension]);
     
-    while (digitalRead(JOY_X) == 0) {
+    while (analogRead(JOY_X) == 0) {
       delay(10);
     }
   }
   
-  if (x == 4095){
+  if (x == 4095  && NB_DIMENSIONS != 0){
+    myDFPlayer.play(2);
     lcd.clear();
     currentDimension = (currentDimension + 1 + NB_DIMENSIONS) % NB_DIMENSIONS;
     lcd.setCursor(0, 0);
@@ -188,35 +212,68 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print(dimensions[currentDimension]);
 
-    while (digitalRead(JOY_X) == 4095) {
+    while (analogRead(JOY_X) == 4095) {
       delay(10);
     }
   }
 
+  if (y == 0) {
+    myDFPlayer.play(3);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("transfert en");
+    lcd.setCursor(0, 1);
+    lcd.print("cours ...");
+
+    delay(2000);
+    char message[64];
+    snprintf(message, sizeof(message),"{\"dimension\":\"%s\",\"action\":\"wiki-retour\"}",dimensions[currentDimension].c_str());
+    client.publish(mqtt_topic, message);
+
+    retourEcran = millis();
+    attenteRetour = true;
+    
+  }
+
   if (digitalRead(BTN) == LOW){
+
+    myDFPlayer.play(1);
+
+    delay(2000);
+
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Ouverture du");
     lcd.setCursor(0, 1);
     lcd.print("portail ...");
+    myDFPlayer.play(4);
 
     // ---------- DECLENCHEMENT DU BOOST LED ----------
     analogWrite(LED_PIN, LED_BOOST);
     ledBoosting = true;
     boostStartTime = millis();
 
-    myDFPlayer.play(1);
+    char message[64];
+    snprintf(message, sizeof(message),"{\"dimension\":\"%s\",\"action\":\"portail\"}",dimensions[currentDimension].c_str());
+    client.publish(mqtt_topic, message);
 
     delay(2000);
-
-    client.publish(mqtt_topic, dimensions[currentDimension].c_str());
 
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Portail ouvert");
     lcd.setCursor(0, 1);
     lcd.print("avec succes !");
-    delay(500);
+
+    retourEcran = millis();
+    attenteRetour = true;
+  }
+
+  if (attenteRetour && millis() - retourEcran >= 3000) {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Batterie : 86%");
+    attenteRetour = false;
   }
 
   delay(100);
